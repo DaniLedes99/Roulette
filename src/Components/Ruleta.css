@@ -1,0 +1,59 @@
+.ruleta-container {
+  position: relative;
+  width: 760px;
+  height: 760px;
+}
+
+.ruleta-principal,
+.ruleta-contorno,
+.ruleta-contorno1,
+.ruleta-contorno2,
+.ruleta-contorno3,
+.ball-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.ruleta-principal {
+  z-index: 1;
+}
+
+.ruleta-contorno {
+  z-index: 2;
+}
+
+.ruleta-contorno1 {
+  z-index: 3;
+}
+
+.ruleta-contorno2 {
+  z-index: 4;
+}
+
+.ruleta-contorno3 {
+  z-index: 5;
+}
+
+.ball-container {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 760px;
+  height: 760px;
+  z-index: 6;
+}
+
+.ball {
+  position: relative;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #fff radial-gradient(circle at 5px 5px, #fff, #444); /* color de la bola */
+  box-shadow: 1px 1px 4px #000;
+  top: 50%;
+  left: 50%;
+  z-index: 7;
+}
