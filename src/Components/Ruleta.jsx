@@ -8,7 +8,7 @@ import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
 
 function Ruleta() {
-  const [currentNumber, setCurrentNumber] = useState(2); // el número que viene del servidor
+  const [currentNumber, setCurrentNumber] = useState(33); // el número que viene del servidor
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -88,7 +88,7 @@ function Ruleta() {
         { value: 0, duration: 2000 },
         { value: 40, duration: 1000 },
         { value: 65, duration: 900 },
-        { value: 128, duration: 1000 },
+        { value: 75, duration: 1000 },
       ],
       rotate: [{ value: ballEndRotation, duration: singleSpinDuration }],
       loop: 1,
@@ -119,7 +119,7 @@ function Ruleta() {
         >
           <div
             className={"ball"}
-            style={{ transform: "translate(-15px, -320px)" }} //posición inicial de la bola
+            style={{ transform: "translate(-5px, -175px)" }} //posición inicial de la bola
           ></div>
         </div>
       </div>

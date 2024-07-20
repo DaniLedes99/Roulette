@@ -1,3 +1,80 @@
-.Board {
+/* @media (min-width: 768px) {
+  .Board {
+    width: 50%;
+  }
+} */
+
+.Board-container-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Board-container-up {
+  position: relative;
+  width: 1000px;
+  height: 265px;
+}
+
+.Board-img {
+  display: block;
   width: 100%;
+  height: auto;
+}
+
+.Tabla-overlay-up {
+  position: absolute;
+  top: 0px;
+  bottom: 100px;
+  margin-top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Permite que los eventos del ratón pasen a través de la capa de superposición */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Tabla-overlay-down {
+  position: absolute;
+  top: 0px;
+  bottom: 100px;
+  margin-top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Permite que los eventos del ratón pasen a través de la capa de superposición */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Tabla {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.Tabla td {
+  border: 0.1px solid black;
+  padding: 0px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.Tabla tr {
+  border: 0.1px solid black;
+  padding: 0px;
+}
+
+.Board-container-down {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 840px;
+  height: 120px;
+  left: 8px;
+}
+.Board-img-down {
+  width: 100%;
+  height: 100%;
 }

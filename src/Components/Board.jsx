@@ -1,67 +1,82 @@
-import React from "react";
 import boardImage from "../../img/Board.png";
+import boardImageDown from "../../img/boarddown.png";
 import "./Board.css";
+import React, { useState } from "react";
 
 function Board() {
-  let number = 0;
-
-  //AL SERVICIO
-  const RouletteWheelNumbers = [
-    0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
-    24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
-  ];
-
-  const getRouletteIndexFromNumber = (number) => {
-    return RouletteWheelNumbers.indexOf(parseInt(number));
+  const handleCellClick = (numeroCasilla, j, i) => {
+    console.log(`Se ha seleccionado la casilla ${numeroCasilla}`);
+    console.log(j, i);
   };
-  //FIN DEL SERVICIO
-  const isRedOrBlackNumber = (number) => {
-    const index = getRouletteIndexFromNumber(number);
-    if (index % 2 !== 0 && index !== 0) {
-      console.log("El número es rojo");
-      return 1;
-    } else if (index == 0) {
-      console.log("el numero es cero, no es ni rojo ni negro");
-      return 0;
-    } else {
-      console.log("El número es negro, MI NÚMERO ES NEGRO?");
-      return 2;
+
+  const renderTabla = (filas, columnas, alturasFilas, anchoColumna) => {
+    const tabla = [];
+
+    for (let i = 0; i < filas; i++) {
+      const fila = [];
+      for (let j = 0; j < columnas; j++) {
+        const numeroCasilla = i * columnas + j + 1;
+
+        fila.push(
+          <td
+            key={numeroCasilla}
+            style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px` }}
+            onClick={() => handleCellClick(numeroCasilla, j, i)}
+          ></td>
+        );
+      }
+      tabla.push(<tr key={i}>{fila}</tr>);
     }
+
+    return tabla;
   };
 
-  const isOddOrEvenNumber = (number) => {
-    if (number % 2 !== 0 && number !== 0) {
-      console.log("El número es impar");
-      const oddNumber = 1;
-      return oddNumber;
-    } else if (number == 0) {
-      console.log("el numero es cero, no es par ni impar");
-      const notOddnotEvenZeroBaby = 1;
-      return notOddnotEvenZeroBaby;
-    } else {
-      console.log("El número es par");
-      const evenNumber = 1;
-      return evenNumber;
-    }
-  };
-
-  const isNumberDownto18 = (number) => {
-    if (0 < number <= 18) {
-      return 1; //true
-    } else if (number == 0) {
-      return 0; //is 0
-    } else {
-      return 2; //false
-    }
-  };
-
-  isRedOrBlackNumber(number);
-  isOddOrEvenNumber(number);
-  console.log(isNumberDownto18(number));
   return (
-    <div>
-      <img className="Board" src={boardImage} alt="Board" />
-    </div>
+    <>
+      <div className="Board-container-main">
+        <div className="Board-container-up">
+          <img className="Board-img" src={boardImage} alt="Board" />
+          <div className="Tabla-overlay-up">
+            <table className="Tabla">
+              <tbody>{renderTabla(1, 1, [130], [42])}</tbody>
+            </table>
+            <table className="Tabla">
+              <tbody>
+                {renderTabla(
+                  5,
+                  24,
+                  [43, 5, 37, 5, 40],
+                  [
+                    3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 30, 3,
+                    30, 3, 32, 3, 30, 3, 31, 3, 30,
+                  ]
+                )}
+              </tbody>
+            </table>
+            <table className="Tabla">
+              <tbody>{renderTabla(3, 1, [45, 42, 44], [37])}</tbody>
+            </table>
+          </div>
+        </div>
+        <div className="Board-container-down">
+          <img
+            className="Board-img-down"
+            src={boardImageDown}
+            alt="Board-down"
+          />
+          <div className="Tabla-overlay-down">
+            <table className="Tabla">
+              <tbody>{renderTabla(1, 3, [25], [41.5, 41.5, 42])}</tbody>
+            </table>
+            <table className="Tabla">
+              <tbody>
+                {renderTabla(1, 6, [30], [21.5, 20.5, 21, 20.5, 21, 21])}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

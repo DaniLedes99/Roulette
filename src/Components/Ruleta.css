@@ -1,7 +1,7 @@
 .ruleta-container {
   position: relative;
-  width: 760px;
-  height: 760px;
+  width: 400px; /* no olvidar si se cambia esto, cambiar ball container */
+  height: 400px;
 }
 
 .ruleta-principal,
@@ -15,6 +15,27 @@
   left: 0;
   width: 100%;
   height: auto;
+}
+
+.ball-container {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 400px;
+  height: 400px;
+  z-index: 6;
+}
+
+.ball {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff radial-gradient(circle at 5px 5px, #fff, #444); /* color de la bola */
+  box-shadow: 1px 1px 4px #000;
+  top: 50%;
+  left: 50%;
+  z-index: 7;
 }
 
 .ruleta-principal {
@@ -35,25 +56,4 @@
 
 .ruleta-contorno3 {
   z-index: 5;
-}
-
-.ball-container {
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 760px;
-  height: 760px;
-  z-index: 6;
-}
-
-.ball {
-  position: relative;
-  width: 23px;
-  height: 23px;
-  border-radius: 50%;
-  background: #fff radial-gradient(circle at 5px 5px, #fff, #444); /* color de la bola */
-  box-shadow: 1px 1px 4px #000;
-  top: 50%;
-  left: 50%;
-  z-index: 7;
 }
