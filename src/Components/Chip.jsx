@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Black from "../../img/chip_black.png";
 import Blue from "../../img/chip_blue.png";
 import Orange from "../../img/chip_orange.png";
 import Purple from "../../img/chip_purple.png";
 import "./Chip.css";
-import { useState, useEffect } from "react";
 
-export default function Chip() {
-  const [activeChip, setActiveChip] = useState(null); // Estado para el chip activo
-  const [isFollowing, setIsFollowing] = useState(false); // Estado para verificar si se está siguiendo el cursor
-  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para la posición de la imagen de vista previa
+const Chip = ({ onChipDrop }) => {
+  const [activeChip, setActiveChip] = useState("");
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -27,12 +26,14 @@ export default function Chip() {
 
   const handleChipClick = (chipType) => {
     if (activeChip === chipType && isFollowing) {
-      setIsFollowing(false); // Desactiva el seguimiento si se hace clic nuevamente en el chip activo
+      setIsFollowing(false);
+      onChipDrop({ x: previewImagePos.x, y: previewImagePos.y, chipType });
     } else {
-      setActiveChip(chipType); // Establece el chip activo al hacer clic en él
-      setIsFollowing(true); // Comienza a seguir el cursor al activar el chip
+      setActiveChip(chipType);
+      setIsFollowing(true);
     }
   };
+
   return (
     <>
       <div className="ChipContainer-main">
@@ -40,7 +41,7 @@ export default function Chip() {
           <img
             className="ChipImage"
             src={Black}
-            alt=""
+            alt="original"
             onClick={() => handleChipClick("Black")}
           />
           {activeChip === "Black" && isFollowing && (
@@ -57,7 +58,7 @@ export default function Chip() {
           <img
             className="ChipImage"
             src={Blue}
-            alt=""
+            alt="original"
             onClick={() => handleChipClick("Blue")}
           />
           {activeChip === "Blue" && isFollowing && (
@@ -74,7 +75,7 @@ export default function Chip() {
           <img
             className="ChipImage"
             src={Orange}
-            alt=""
+            alt="original"
             onClick={() => handleChipClick("Orange")}
           />
           {activeChip === "Orange" && isFollowing && (
@@ -91,7 +92,7 @@ export default function Chip() {
           <img
             className="ChipImage"
             src={Purple}
-            alt=""
+            alt="original"
             onClick={() => handleChipClick("Purple")}
           />
           {activeChip === "Purple" && isFollowing && (
@@ -107,4 +108,6 @@ export default function Chip() {
       </div>
     </>
   );
-}
+};
+
+export default Chip;
