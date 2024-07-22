@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import Ruleta from "./Components/Ruleta";
 import Board from "./Components/Board";
+import Chip from "./Components/Chip";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <div className="container">
         <Ruleta />
         <Board />
+        <Chip />
       </div>
     </>
   );

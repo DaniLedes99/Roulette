@@ -1,6 +1,6 @@
-import boardImage from "../../img/Board.png";
+/* import boardImage from "../../img/Board.png"; */
 import ZeroImage from "../../img/0.png";
-import Board from "../../img/BoardMin.png";
+import BoardImage from "../../img/BoardMin.png";
 import Right from "../../img/right.png";
 import boardImageDown from "../../img/boarddown.png";
 import "./Board.css";
@@ -84,37 +84,52 @@ function Board() {
       <div className="Board-container-main">
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
-            <table className="Tabla">
+            <div className="container-img-table">
               <img className="Board-img" src={ZeroImage} alt="Board" />
-              <tbody>{renderTabla(1, 1, [130], [42], handleCellClick)}</tbody>
-            </table>
-            <table className="Tabla">
-              <img className="Board-img" src={Board} alt="Board" />
-              <tbody>
-                {renderTabla(
-                  5,
-                  24,
-                  [43, 5, 37, 5, 40],
-                  [
-                    3, 32, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 30, 3,
-                    31, 3, 32, 3, 31, 3, 31.5, 3, 38,
-                  ],
-                  handleCellClick
-                )}
-              </tbody>
-            </table>
-            <table className="Tabla">
-              <img className="Board-img" src={Right} alt="Board" />
-              <tbody>
-                {renderTabla(3, 1, [45, 42, 44], [30], handleCellClick)}
-              </tbody>
-            </table>
+              <table className="Tabla">
+                <tbody>{renderTabla(1, 1, [133], [40], handleCellClick)}</tbody>
+              </table>
+            </div>
+            <div className="container-img-table">
+              <img className="Board-img" src={BoardImage} alt="Board" />
+              <table className="Tabla">
+                <tbody>
+                  {renderTabla(
+                    5,
+                    24,
+                    [44.5, 4, 37.5, 4, 41],
+                    [
+                      3, 31.8, 3, 31.3, 3, 31, 3, 31.5, 3, 31.5, 3, 31, 3, 31.3,
+                      3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31,
+                    ],
+                    handleCellClick
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="container-img-table">
+              <img
+                className="Board-img"
+                id="arreglatecocol"
+                src={Right}
+                alt="Board"
+              />
+              <table className="Tabla">
+                <tbody>
+                  {renderTabla(3, 1, [46, 42, 44], [37], handleCellClick)}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div className="Board-container-down">
-          <img className="Board-img" src={boardImageDown} alt="Board-down" />
+          <img
+            className="Board-img-down"
+            src={boardImageDown}
+            alt="Board-down"
+          />
           <div className="Tabla-overlay-down">
-            <table className="Tabla">
+            <table className="Tabla-down">
               <tbody>
                 {renderTabla(
                   1,
@@ -128,12 +143,12 @@ function Board() {
                 )}
               </tbody>
             </table>
-            <table className="Tabla">
+            <table className="Tabla-down">
               <tbody>
                 {renderTabla(
                   1,
                   6,
-                  [30],
+                  [32],
                   [21.5, 20.5, 21, 20.5, 21, 21],
                   handleCellClickDownDown,
                   CHIP,
