@@ -23,10 +23,15 @@
   position: absolute;
 }
 
+.ChipContainer:hover .span {
+  display: block;
+}
+
 .PreviewImage {
   position: fixed;
   z-index: 1000;
-  width: 50px;
+  width: 50px; /* Ajusta el tamaño de la imagen de vista previa */
   height: auto;
   pointer-events: none; /* Evita que la imagen de vista previa intercepte eventos de mouse */
+  /* Transición suave para el efecto de seguimiento */
 }

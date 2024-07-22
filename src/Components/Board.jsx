@@ -7,18 +7,6 @@ import "./Board.css";
 import React, { useState } from "react";
 
 function Board() {
-  const [permanentChip, setPermanentChip] = useState(null);
-
-  const handleBoardClick = (e) => {
-    // Handle any board-specific click behavior
-  };
-
-  const handleDrop = (e) => {
-    if (!permanentChip) {
-      onChipDrop(e.dataTransfer.getData("chipType"));
-    }
-  };
-
   let APUESTAS = {
     menoresA12: 0,
     entre12y24: 0,
@@ -93,15 +81,7 @@ function Board() {
 
   return (
     <>
-      <div className="Board-container-main" onDrop={handleDrop}>
-        {permanentChip && (
-          <img
-            className="PermanentChip"
-            src={`../../img/chip_${permanentChip.chipType.toLowerCase()}.png`}
-            alt="Permanent Chip"
-            style={{ left: permanentChip.x, top: permanentChip.y }}
-          />
-        )}
+      <div className="Board-container-main">
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
