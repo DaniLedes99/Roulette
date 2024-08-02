@@ -10,6 +10,7 @@ const ChipItem = ({
   isFollowing,
   previewImagePos,
   onClick,
+  value,
 }) => {
   return (
     <div className="ChipContainer">
@@ -17,7 +18,7 @@ const ChipItem = ({
         className="ChipImage"
         src={getChipImage(chipType)}
         alt=""
-        onClick={() => onClick(chipType)}
+        onClick={() => onClick(chipType,value)}
       />
       {activeChipLocal === chipType && isFollowing && (
         <img
@@ -27,12 +28,12 @@ const ChipItem = ({
           style={{ left: previewImagePos.x, top: previewImagePos.y }}
         />
       )}
-      <span className="span">{getChipValue(chipType)}</span>
+      <span className="span">{value}</span>
     </div>
   );
 };
 
-// Función utilitaria para obtener la imagen del chip según el tipo
+
 const getChipImage = (chipType) => {
   switch (chipType) {
     case "Black":
@@ -48,20 +49,6 @@ const getChipImage = (chipType) => {
   }
 };
 
-// Función utilitaria para obtener el valor del chip según el tipo
-const getChipValue = (chipType) => {
-  switch (chipType) {
-    case "Black":
-      return 100;
-    case "Blue":
-      return 25;
-    case "Orange":
-      return 10;
-    case "Purple":
-      return 1;
-    default:
-      return 0;
-  }
-};
+
 
 export default ChipItem;

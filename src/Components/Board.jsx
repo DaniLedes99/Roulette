@@ -5,8 +5,8 @@ import boardImageDown from "../../img/boarddown.png";
 import "./Board.css";
 import React, { useState } from "react";
 
-const Board = ({ activeChip }) => {
-  let cantidad = 50;
+const Board = ({ activeChip, chipValue }) => {
+ 
 
   let APUESTAS = {
     menoresA12: 0,
@@ -22,17 +22,17 @@ const Board = ({ activeChip }) => {
   const handleCellClick = (j, i) => {
     console.log(j, i);
   };
-  const handleCellClickDownUp = (j, i, activeChip, cantidad, APUESTAS) => {
+  const handleCellClickDownUp = (j, i, activeChip, chipValue, APUESTAS) => {
     if (activeChip != null) {
       switch (j) {
         case 0:
-          APUESTAS["menoresA12"] += cantidad;
+          APUESTAS["menoresA12"] += chipValue;
           break;
         case 1:
-          APUESTAS["entre12y24"] += cantidad;
+          APUESTAS["entre12y24"] += chipValue;
           break;
         case 2:
-          APUESTAS["entre24y36"] += cantidad;
+          APUESTAS["entre24y36"] += chipValue;
           break;
         default:
           console.log("Opción no reconocida");
@@ -69,7 +69,7 @@ const Board = ({ activeChip }) => {
             key={numeroCasilla}
             style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px` }}
             onClick={() =>
-              functionasociate(j, i, activeChip, cantidad, APUESTAS)
+              functionasociate(j, i, activeChip, chipValue, APUESTAS)
             }
           ></td>
         );
@@ -83,7 +83,7 @@ const Board = ({ activeChip }) => {
   return (
     <>
       <div className="Board-container-main">
-        <p>Active Chip: {activeChip}</p>
+        <p>Active Chip: {activeChip}{chipValue}</p>
 
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
@@ -141,7 +141,7 @@ const Board = ({ activeChip }) => {
                   [41.5, 41.5, 42],
                   handleCellClickDownUp,
                   activeChip,
-                  cantidad,
+                  chipValue,
                   APUESTAS
                 )}
               </tbody>
@@ -155,7 +155,7 @@ const Board = ({ activeChip }) => {
                   [21.5, 20.5, 21, 20.5, 21, 21],
                   handleCellClickDownDown,
                   activeChip,
-                  cantidad,
+                  chipValue,
                   APUESTAS
                 )}
               </tbody>
