@@ -3,6 +3,10 @@ import BoardImage from "../../img/BoardMin.png";
 import Right from "../../img/right.png";
 import boardImageDown from "../../img/boarddown.png";
 import "./Board.css";
+import Black from "../../img/chip_black.png";
+import Blue from "../../img/chip_blue.png";
+import Orange from "../../img/chip_orange.png";
+import Purple from "../../img/chip_purple.png";
 import React, { useState } from "react";
 
 const Board = ({ activeChip, chipValue }) => {
@@ -19,8 +23,32 @@ const Board = ({ activeChip, chipValue }) => {
     cero: 0,
   };
 
+  const getChipImage = (chipType) => {
+    switch (chipType) {
+      case "Black":
+        return Black;
+      case "Blue":
+        return Blue;
+      case "Orange":
+        return Orange;
+      case "Purple":
+        return Purple;
+      default:
+        return null;
+    }
+  };
+
+  const [imagenPos, setImagenPos] = useState({ x: -1, y: -1 }); // Para almacenar la posición de la imagen
+  const [chipTipo, setChipTipo] = useState(null); //
+
+  
+
   const handleCellClick = (j, i) => {
-    console.log(j, i);
+    if (activeChip !== null) {
+      setImagenPos({ x: j, y: i });
+      setChipTipo(activeChip);
+    }
+    console.log(i, j);
   };
   const handleCellClickDownUp = (j, i, activeChip, chipValue, APUESTAS) => {
     if (activeChip != null) {
@@ -53,8 +81,6 @@ const Board = ({ activeChip, chipValue }) => {
     alturasFilas,
     anchoColumna,
     functionasociate,
-    CHIP,
-    cantidad,
     APUESTAS
   ) => {
     const tabla = [];
@@ -67,16 +93,28 @@ const Board = ({ activeChip, chipValue }) => {
         fila.push(
           <td
             key={numeroCasilla}
-            style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px` }}
-            onClick={() =>
-              functionasociate(j, i, activeChip, chipValue, APUESTAS)
-            }
-          ></td>
+            style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`, position: 'relative' }}
+            onClick={() => handleCellClick(j, i)}
+          >
+            {imagenPos.x === j && imagenPos.y === i && chipTipo && (
+              <img
+                src={getChipImage(chipTipo)}
+                alt="chip"
+                style={{
+                  position: 'absolute',
+                  top: '30px', // Ajusta según sea necesario para que la imagen esté arriba de la celda
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '40px', // Ajusta el tamaño según sea necesario
+                  height: 'auto',
+                }}
+              />
+            )}
+          </td>
         );
       }
       tabla.push(<tr key={i}>{fila}</tr>);
     }
-
     return tabla;
   };
 

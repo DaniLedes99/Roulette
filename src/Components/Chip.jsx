@@ -6,6 +6,7 @@ const Chip = ({ setActiveChip, setChipValue }) => {
   const [activeChipLocal, setActiveChipLocal] = useState(null); // Estado local para el chip activo
   const [isFollowing, setIsFollowing] = useState(false); // Estado para verificar si se está siguiendo el cursor
   const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para la posición de la imagen de vista previa
+  
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -34,7 +35,6 @@ const Chip = ({ setActiveChip, setChipValue }) => {
       setIsFollowing(true);
     }
   };
-
 
   return (
     <div className="ChipContainer-main">
@@ -69,6 +69,7 @@ const Chip = ({ setActiveChip, setChipValue }) => {
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
         value={1}
+
       />
     </div>
   );
