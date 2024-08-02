@@ -5,12 +5,13 @@ import Board from "./Components/Board";
 import Chip from "./Components/Chip";
 
 function App() {
+  const [activeChip, setActiveChip] = useState(null);
   return (
     <>
       <div className="container">
         <Ruleta />
-        <Board />
-        <Chip />
+        <Board activeChip={activeChip} />
+        <Chip setActiveChip={setActiveChip} />
       </div>
     </>
   );

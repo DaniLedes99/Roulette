@@ -1,4 +1,3 @@
-/* import boardImage from "../../img/Board.png"; */
 import ZeroImage from "../../img/0.png";
 import BoardImage from "../../img/BoardMin.png";
 import Right from "../../img/right.png";
@@ -6,7 +5,9 @@ import boardImageDown from "../../img/boarddown.png";
 import "./Board.css";
 import React, { useState } from "react";
 
-function Board() {
+const Board = ({ activeChip }) => {
+  let cantidad = 50;
+
   let APUESTAS = {
     menoresA12: 0,
     entre12y24: 0,
@@ -18,13 +19,11 @@ function Board() {
     cero: 0,
   };
 
-  const CHIP = true;
-  const cantidad = 500;
   const handleCellClick = (j, i) => {
     console.log(j, i);
   };
-  const handleCellClickDownUp = (j, i, CHIP, cantidad, APUESTAS) => {
-    if ((CHIP = true)) {
+  const handleCellClickDownUp = (j, i, activeChip, cantidad, APUESTAS) => {
+    if (activeChip != null) {
       switch (j) {
         case 0:
           APUESTAS["menoresA12"] += cantidad;
@@ -69,7 +68,9 @@ function Board() {
           <td
             key={numeroCasilla}
             style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px` }}
-            onClick={() => functionasociate(j, i, CHIP, cantidad, APUESTAS)}
+            onClick={() =>
+              functionasociate(j, i, activeChip, cantidad, APUESTAS)
+            }
           ></td>
         );
       }
@@ -82,6 +83,8 @@ function Board() {
   return (
     <>
       <div className="Board-container-main">
+        <p>Active Chip: {activeChip}</p>
+
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
@@ -137,7 +140,7 @@ function Board() {
                   [25],
                   [41.5, 41.5, 42],
                   handleCellClickDownUp,
-                  CHIP,
+                  activeChip,
                   cantidad,
                   APUESTAS
                 )}
@@ -151,7 +154,7 @@ function Board() {
                   [32],
                   [21.5, 20.5, 21, 20.5, 21, 21],
                   handleCellClickDownDown,
-                  CHIP,
+                  activeChip,
                   cantidad,
                   APUESTAS
                 )}
@@ -162,6 +165,6 @@ function Board() {
       </div>
     </>
   );
-}
+};
 
 export default Board;
