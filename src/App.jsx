@@ -6,12 +6,16 @@ import Chip from "./Components/Chip";
 
 function App() {
   const [activeChip, setActiveChip] = useState(null);
+  const [activeChipValue, setActiveChipValue] = useState(0);
   return (
     <>
       <div className="container">
         <Ruleta />
-        <Board activeChip={activeChip} />
-        <Chip setActiveChip={setActiveChip} />
+        <Board activeChip={activeChip} activeChipValue={activeChipValue} />
+        <Chip
+          setActiveChip={setActiveChip}
+          setActiveChipValue={setActiveChipValue}
+        />
       </div>
     </>
   );

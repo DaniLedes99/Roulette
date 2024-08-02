@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ChipItem from "./ChipItem";
 import "./Chip.css";
 
-const Chip = ({ setActiveChip }) => {
+const Chip = ({ setActiveChip, setActiveChipValue }) => {
   const [activeChipLocal, setActiveChipLocal] = useState(null); // Estado local para el chip activo
   const [isFollowing, setIsFollowing] = useState(false); // Estado para verificar si se está siguiendo el cursor
   const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para la posición de la imagen de vista previa
@@ -25,10 +25,26 @@ const Chip = ({ setActiveChip }) => {
     if (activeChipLocal === chipType && isFollowing) {
       setIsFollowing(false); // Desactiva el seguimiento si se hace clic nuevamente en el chip activo
       setActiveChip(null); // Reinicia el activeChip en el componente padre
+      setActiveChipValue(0);
     } else {
       setActiveChip(chipType); // Establece el chip activo en el componente padre
       setActiveChipLocal(chipType); // Establece el chip activo localmente
-      setIsFollowing(true); // Comienza a seguir el cursor al activar el chip
+      setIsFollowing(true);
+      setActiveChipValue(getChipValue(chipType)); // Comienza a seguir el cursor al activar el chip
+    }
+  };
+  const getChipValue = (chipType) => {
+    switch (chipType) {
+      case "Black":
+        return 100;
+      case "Blue":
+        return 25;
+      case "Orange":
+        return 10;
+      case "Purple":
+        return 1;
+      default:
+        return 0;
     }
   };
 
