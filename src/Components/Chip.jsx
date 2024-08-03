@@ -11,7 +11,7 @@ const Chip = ({ setActiveChip, setChipValue }) => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isFollowing) {
-        setPreviewImagePos({ x: e.clientX -20, y: e.clientY-18 });
+        setPreviewImagePos({ x: e.clientX -22, y: e.clientY-18 });
       }
     };
 

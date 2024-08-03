@@ -10,7 +10,8 @@ import Purple from "../../img/chip_purple.png";
 import React, { useState } from "react";
 
 const Board = ({ activeChip, chipValue }) => {
- 
+  const [imagenPos, setImagenPos] = useState({ x: -1, y: -1 }); // Para almacenar la posición de la imagen
+  const [chipTipo, setChipTipo] = useState(null); 
 
   let APUESTAS = {
     menoresA12: 0,
@@ -38,18 +39,13 @@ const Board = ({ activeChip, chipValue }) => {
     }
   };
 
-  const [imagenPos, setImagenPos] = useState({ x: -1, y: -1 }); // Para almacenar la posición de la imagen
-  const [chipTipo, setChipTipo] = useState(null); //
-
-  
-
-  const handleCellClick = (j, i) => {
+/*   const handleCellClick = (j, i, tableId) => {
     if (activeChip !== null) {
-      setImagenPos({ x: j, y: i });
+      setImagenPos({ x: j, y: i, tableId: tableId }); 
       setChipTipo(activeChip);
     }
     console.log(i, j);
-  };
+  }; */
   const handleCellClickDownUp = (j, i, activeChip, chipValue, APUESTAS) => {
     if (activeChip != null) {
       switch (j) {
@@ -70,10 +66,13 @@ const Board = ({ activeChip, chipValue }) => {
     } else {
       console.log("No se eligió ninguna chip");
     }
+    if (activeChip !== null) {
+      setImagenPos({ x: j, y: i, tableId: tableId }); 
+      setChipTipo(activeChip);
   };
-  const handleCellClickDownDown = (j, i) => {
+/*   const handleCellClickDownDown = (j, i) => {
     console.log(j, i);
-  };
+  }; */
 
   const renderTabla = (
     filas,
@@ -81,7 +80,10 @@ const Board = ({ activeChip, chipValue }) => {
     alturasFilas,
     anchoColumna,
     functionasociate,
-    APUESTAS
+    activeChip,
+    chipValue,
+    APUESTAS,
+    tableId
   ) => {
     const tabla = [];
 
@@ -94,15 +96,15 @@ const Board = ({ activeChip, chipValue }) => {
           <td
             key={numeroCasilla}
             style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`, position: 'relative' }}
-            onClick={() => handleCellClick(j, i)}
+            onClick={() => functionasociate(j, i,chipValue, APUESTAS, tableId)}
           >
-            {imagenPos.x === j && imagenPos.y === i && chipTipo && (
+           {imagenPos.x === j && imagenPos.y === i && imagenPos.tableId === tableId && activeChip && (
               <img
-                src={getChipImage(chipTipo)}
+                src={getChipImage(activeChip)}
                 alt="chip"
                 style={{
                   position: 'absolute',
-                  top: '30px', // Ajusta según sea necesario para que la imagen esté arriba de la celda
+                  top: '50%', // Ajusta según sea necesario para que la imagen esté arriba de la celda
                   left: '50%',
                   transform: 'translateX(-50%)',
                   width: '40px', // Ajusta el tamaño según sea necesario
@@ -128,7 +130,7 @@ const Board = ({ activeChip, chipValue }) => {
             <div className="container-img-table">
               <img className="Board-img" src={ZeroImage} alt="Board" />
               <table className="Tabla">
-                <tbody>{renderTabla(1, 1, [133], [40], handleCellClick)}</tbody>
+                <tbody>{renderTabla(1, 1, [133], [40], handleCellClick, table0)}</tbody>
               </table>
             </div>
             <div className="container-img-table">
@@ -143,7 +145,7 @@ const Board = ({ activeChip, chipValue }) => {
                       3, 31.8, 3, 31.3, 3, 31, 3, 31.5, 3, 31.5, 3, 31, 3, 31.3,
                       3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31,
                     ],
-                    handleCellClick
+                    handleCellClick, table1
                   )}
                 </tbody>
               </table>
@@ -157,7 +159,7 @@ const Board = ({ activeChip, chipValue }) => {
               />
               <table className="Tabla">
                 <tbody>
-                  {renderTabla(3, 1, [46, 42, 44], [37], handleCellClick)}
+                  {renderTabla(3, 1, [46, 42, 44], [37], handleCellClick,table2)}
                 </tbody>
               </table>
             </div>
@@ -180,7 +182,7 @@ const Board = ({ activeChip, chipValue }) => {
                   handleCellClickDownUp,
                   activeChip,
                   chipValue,
-                  APUESTAS
+                  APUESTAS,table3
                 )}
               </tbody>
             </table>
@@ -194,7 +196,7 @@ const Board = ({ activeChip, chipValue }) => {
                   handleCellClickDownDown,
                   activeChip,
                   chipValue,
-                  APUESTAS
+                  APUESTAS,table4
                 )}
               </tbody>
             </table>
@@ -204,5 +206,6 @@ const Board = ({ activeChip, chipValue }) => {
     </>
   );
 };
+}
 
 export default Board;
