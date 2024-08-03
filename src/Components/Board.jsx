@@ -7,11 +7,22 @@ import Black from "../../img/chip_black.png";
 import Blue from "../../img/chip_blue.png";
 import Orange from "../../img/chip_orange.png";
 import Purple from "../../img/chip_purple.png";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight } from '@fortawesome/free-solid-svg-icons';
+import { faEraser } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from "react";
+
 
 const Board = ({ activeChip, chipValue }) => {
   const [imagenPos, setImagenPos] = useState({ x: -1, y: -1 }); // Para almacenar la posición de la imagen
   const [chipTipo, setChipTipo] = useState(null); 
+  const [fichas, setFichas] = useState([]);
+  const [historialFichas, setHistorialFichas] = useState([]);
+const [deshechas, setDeshechas] = useState([]);
+const [nextId, setNextId] = useState(1);
+
 
   let APUESTAS = {
     menoresA12: 0,
@@ -39,6 +50,17 @@ const Board = ({ activeChip, chipValue }) => {
     }
   };
 
+  const clearAllChips = () => {
+    setFichas([]);
+  };
+
+  const borrarFicha = (id) => {
+    // Filtrar las fichas para eliminar la ficha con el id especificado
+    const nuevasFichas = fichas.filter(ficha => ficha.id !== id);
+    setFichas(nuevasFichas);
+  };
+  
+
   const handleCellClickDownUp = (j, i, chipValue, APUESTAS, tableId) => {
     if (activeChip != null) {
       switch (j) {
@@ -55,13 +77,36 @@ const Board = ({ activeChip, chipValue }) => {
           console.log("Opción no reconocida");
           break;
       }
-      console.log(APUESTAS);
-      setImagenPos({ x: j, y: i, tableId: tableId });
-      setChipTipo(activeChip);
+      setHistorialFichas([...historialFichas, [...fichas]]);
+      setDeshechas([]);
+  
+      // Añadir una nueva ficha al estado con un id único
+      setFichas([...fichas, { id: nextId, x: j, y: i, tableId: tableId, chipType: activeChip }]);
+      setNextId(nextId + 1);
     } else {
       console.log("No se eligió ninguna chip");
     }
   };
+
+  const deshacer = () => {
+    if (historialFichas.length > 0) {
+      const estadoAnterior = historialFichas.pop(); // Obtener el estado anterior
+      setDeshechas([...deshechas, [...fichas]]); // Guardar el estado actual en deshechas
+      setFichas(estadoAnterior); // Restaurar el estado anterior
+      setHistorialFichas([...historialFichas]); // Actualizar el historial
+    }
+  };
+  
+  const rehacer = () => {
+    if (deshechas.length > 0) {
+      const estadoRehecho = deshechas.pop(); // Obtener el estado rehecho
+      setHistorialFichas([...historialFichas, [...fichas]]); // Guardar el estado actual en historial
+      setFichas(estadoRehecho); // Restaurar el estado rehecho
+      setDeshechas([...deshechas]); // Actualizar la pila de deshechas
+    }
+  };
+
+  
 
   const getImageClass = (tableId) => {
     switch (tableId) {
@@ -97,7 +142,6 @@ const Board = ({ activeChip, chipValue }) => {
       const fila = [];
       for (let j = 0; j < columnas; j++) {
         const numeroCasilla = i * columnas + j + 1;
-
         fila.push(
           <td
             key={numeroCasilla}
@@ -108,9 +152,24 @@ const Board = ({ activeChip, chipValue }) => {
               <img
                 src={getChipImage(activeChip)}
                 alt="chip"
-                className={`image-default ${getImageClass(tableId)}`} // Aplicar clases CSS
+                className={`image-default ${getImageClass(tableId)}`} 
               />
             )}
+  
+            {/* Renderizar las fichas existentes en esta celda */}
+            {fichas.filter(ficha => ficha.x === j && ficha.y === i && ficha.tableId === tableId).map(ficha => (
+              <img
+                key={ficha.id}
+                src={getChipImage(ficha.chipType)}
+                alt="chip"
+                className={`image-default ${getImageClass(tableId)}`}
+                onClick={(e) => {
+                  e.stopPropagation(); // Evita que el clic en la ficha active la celda
+                  borrarFicha(ficha.id);
+                }}
+      
+              />
+            ))}
           </td>
         );
       }
@@ -131,13 +190,32 @@ const Board = ({ activeChip, chipValue }) => {
   }
 
   newArray.push(lastValue);
-  
+
+
+  const [modoBorrado, setModoBorrado] = useState(false);
+
+const toggleModoBorrado = () => {
+  setModoBorrado(!modoBorrado);
+};
 
   return (
     <>
       <div className="Board-container-main">
-        <p>Active Chip: {activeChip} {chipValue}</p>
-
+        <div className="buttons-container">
+        <p>Chip: {activeChip} {chipValue}</p>
+        <div class="cross-container">
+        <FontAwesomeIcon  onClick={deshacer} disabled={historialFichas.length === 0} icon={faArrowRotateLeft} size="3x" className="cross" color="red" />
+        </div>
+        <div class="cross-container">
+        <FontAwesomeIcon icon={faArrowRotateRight} onClick={rehacer} disabled={deshechas.length === 0} size="3x" className="cross" color="red"/>
+        </div>
+        <div class="cross-container">
+        <FontAwesomeIcon icon={faEraser}  size="3x" onClick={toggleModoBorrado} className="cross" />
+      </div>
+      <div class="cross-container">
+      <FontAwesomeIcon icon={faXmark}onClick={clearAllChips} className="cross" color="red" size="3x"></FontAwesomeIcon> 
+      </div>
+        </div>
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
