@@ -39,14 +39,7 @@ const Board = ({ activeChip, chipValue }) => {
     }
   };
 
-/*   const handleCellClick = (j, i, tableId) => {
-    if (activeChip !== null) {
-      setImagenPos({ x: j, y: i, tableId: tableId }); 
-      setChipTipo(activeChip);
-    }
-    console.log(i, j);
-  }; */
-  const handleCellClickDownUp = (j, i, activeChip, chipValue, APUESTAS) => {
+  const handleCellClickDownUp = (j, i, chipValue, APUESTAS, tableId) => {
     if (activeChip != null) {
       switch (j) {
         case 0:
@@ -63,16 +56,29 @@ const Board = ({ activeChip, chipValue }) => {
           break;
       }
       console.log(APUESTAS);
+      setImagenPos({ x: j, y: i, tableId: tableId });
+      setChipTipo(activeChip);
     } else {
       console.log("No se eligió ninguna chip");
     }
-    if (activeChip !== null) {
-      setImagenPos({ x: j, y: i, tableId: tableId }); 
-      setChipTipo(activeChip);
   };
-/*   const handleCellClickDownDown = (j, i) => {
-    console.log(j, i);
-  }; */
+
+  const getImageClass = (tableId) => {
+    switch (tableId) {
+      case 'table0':
+        return 'image-table0';
+      case 'table1':
+        return 'image-table1';
+      case 'table2':
+        return 'image-table2';
+      case 'table3':
+        return 'image-table3';
+      case 'table4':
+        return 'image-table4';
+      default:
+        return '';
+    }
+  };
 
   const renderTabla = (
     filas,
@@ -96,20 +102,13 @@ const Board = ({ activeChip, chipValue }) => {
           <td
             key={numeroCasilla}
             style={{ padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`, position: 'relative' }}
-            onClick={() => functionasociate(j, i,chipValue, APUESTAS, tableId)}
+            onClick={() => functionasociate(j, i, chipValue, APUESTAS, tableId)}
           >
-           {imagenPos.x === j && imagenPos.y === i && imagenPos.tableId === tableId && activeChip && (
+            {imagenPos.x === j && imagenPos.y === i && imagenPos.tableId === tableId && activeChip && (
               <img
                 src={getChipImage(activeChip)}
                 alt="chip"
-                style={{
-                  position: 'absolute',
-                  top: '50%', // Ajusta según sea necesario para que la imagen esté arriba de la celda
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '40px', // Ajusta el tamaño según sea necesario
-                  height: 'auto',
-                }}
+                className={`image-default ${getImageClass(tableId)}`} // Aplicar clases CSS
               />
             )}
           </td>
@@ -120,17 +119,31 @@ const Board = ({ activeChip, chipValue }) => {
     return tabla;
   };
 
+  const firstValue = 30; 
+  const lastValue = 26;  
+  const newArray = [];
+  
+  newArray.push(firstValue);
+
+  const values = [4, 26];
+  for (let i = 0; i < 21; i++) {
+    newArray.push(values[i % 2]);
+  }
+
+  newArray.push(lastValue);
+  
+
   return (
     <>
       <div className="Board-container-main">
-        <p>Active Chip: {activeChip}{chipValue}</p>
+        <p>Active Chip: {activeChip} {chipValue}</p>
 
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
               <img className="Board-img" src={ZeroImage} alt="Board" />
               <table className="Tabla">
-                <tbody>{renderTabla(1, 1, [133], [40], handleCellClick, table0)}</tbody>
+                <tbody>{renderTabla(1, 1, [133], [40], handleCellClickDownUp, activeChip, chipValue, APUESTAS, 'table0')}</tbody>
               </table>
             </div>
             <div className="container-img-table">
@@ -140,12 +153,9 @@ const Board = ({ activeChip, chipValue }) => {
                   {renderTabla(
                     5,
                     24,
-                    [44.5, 4, 37.5, 4, 41],
-                    [
-                      3, 31.8, 3, 31.3, 3, 31, 3, 31.5, 3, 31.5, 3, 31, 3, 31.3,
-                      3, 31, 3, 31, 3, 31, 3, 31, 3, 31, 3, 31,
-                    ],
-                    handleCellClick, table1
+                    [42, 8, 34, 8, 38],newArray
+                    ,
+                    handleCellClickDownUp, activeChip, chipValue, APUESTAS, 'table1'
                   )}
                 </tbody>
               </table>
@@ -159,7 +169,7 @@ const Board = ({ activeChip, chipValue }) => {
               />
               <table className="Tabla">
                 <tbody>
-                  {renderTabla(3, 1, [46, 42, 44], [37], handleCellClick,table2)}
+                  {renderTabla(3, 1, [46, 42, 44], [37], handleCellClickDownUp, activeChip, chipValue, APUESTAS, 'table2')}
                 </tbody>
               </table>
             </div>
@@ -182,7 +192,8 @@ const Board = ({ activeChip, chipValue }) => {
                   handleCellClickDownUp,
                   activeChip,
                   chipValue,
-                  APUESTAS,table3
+                  APUESTAS,
+                  'table3'
                 )}
               </tbody>
             </table>
@@ -193,10 +204,11 @@ const Board = ({ activeChip, chipValue }) => {
                   6,
                   [32],
                   [21.5, 20.5, 21, 20.5, 21, 21],
-                  handleCellClickDownDown,
+                  handleCellClickDownUp,
                   activeChip,
                   chipValue,
-                  APUESTAS,table4
+                  APUESTAS,
+                  'table4'
                 )}
               </tbody>
             </table>
@@ -206,6 +218,5 @@ const Board = ({ activeChip, chipValue }) => {
     </>
   );
 };
-}
 
 export default Board;

@@ -3,15 +3,15 @@ import ChipItem from "./ChipItem";
 import "./Chip.css";
 
 const Chip = ({ setActiveChip, setChipValue }) => {
-  const [activeChipLocal, setActiveChipLocal] = useState(null); // Estado local para el chip activo
-  const [isFollowing, setIsFollowing] = useState(false); // Estado para verificar si se está siguiendo el cursor
-  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para la posición de la imagen de vista previa
+  const [activeChipLocal, setActiveChipLocal] = useState(null); 
+  const [isFollowing, setIsFollowing] = useState(false); 
+  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para el follow
   
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isFollowing) {
-        setPreviewImagePos({ x: e.clientX -22, y: e.clientY-18 });
+        setPreviewImagePos({ x: e.clientX , y: e.clientY }); // -22 y -18
       }
     };
 
@@ -25,13 +25,13 @@ const Chip = ({ setActiveChip, setChipValue }) => {
 
   const handleChipClick = (chipType, value) => {
     if (activeChipLocal === chipType && isFollowing) {
-      setIsFollowing(false); // Desactiva el seguimiento si se hace clic nuevamente en el chip activo
-      setActiveChip(null); // Reinicia el activeChip en el componente padre
+      setIsFollowing(false); 
+      setActiveChip(null); 
       setChipValue(0);
     } else {
-      setActiveChip(chipType); // Establece el chip activo en el componente padre
-      setChipValue(value); // Establece el valor del chip en el componente padre
-      setActiveChipLocal(chipType); // Establece el chip activo localmente
+      setActiveChip(chipType); 
+      setChipValue(value); 
+      setActiveChipLocal(chipType); 
       setIsFollowing(true);
     }
   };

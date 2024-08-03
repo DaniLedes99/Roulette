@@ -117,3 +117,34 @@
   height: 120px;
   left: 7px;
 }
+
+.image-default {
+  position: absolute;
+  width: 40px;
+  height: auto;
+}
+
+.image-table0 {
+  top: 45%;
+  left: 35%;
+}
+
+.image-table1 {
+  transform: translateX(-40%) translateY(-40%);
+ 
+}
+
+.image-table2 {
+  transform: translateX(-50%) translateY(-38%);
+
+}
+
+.image-table3 {
+  transform: translateX(-50%) translateY(-50%);
+
+}
+
+.image-table4 {
+  transform: translateX(-50%) translateY(-50%);
+
+}
