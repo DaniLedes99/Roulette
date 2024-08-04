@@ -15,12 +15,17 @@ import { faEraser } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
 const Board = ({ activeChip, chipValue }) => {
-  const [imagenPos, setImagenPos] = useState({ x: -1, y: -1 }); // Para almacenar la posición de la imagen
-  const [chipTipo, setChipTipo] = useState(null);
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [nextId, setNextId] = useState(1);
+  const [modoBorrado, setModoBorrado] = useState(false);
+
+  const toggleModoBorrado = () => {
+    setModoBorrado((prevState) => !prevState);
+  };
+
+  const imagenPos = { x: -1, y: -1 }; // Para almacenar la posición de la imagen
 
   let APUESTAS = {
     menoresA12: 0,
@@ -132,7 +137,8 @@ const Board = ({ activeChip, chipValue }) => {
     activeChip,
     chipValue,
     APUESTAS,
-    tableId
+    tableId,
+    modoBorrado
   ) => {
     const tabla = [];
 
@@ -160,7 +166,6 @@ const Board = ({ activeChip, chipValue }) => {
                 />
               )}
 
-            {/* Renderizar las fichas existentes en esta celda */}
             {fichas
               .filter(
                 (ficha) =>
@@ -174,7 +179,9 @@ const Board = ({ activeChip, chipValue }) => {
                   className={`image-default ${getImageClass(tableId)}`}
                   onClick={(e) => {
                     e.stopPropagation(); // Evita que el clic en la ficha active la celda
-                    borrarFicha(ficha.id);
+                    if (modoBorrado) {
+                      borrarFicha(ficha.id);
+                    }
                   }}
                 />
               ))}
@@ -198,12 +205,6 @@ const Board = ({ activeChip, chipValue }) => {
   }
 
   newArray.push(lastValue);
-
-  const [modoBorrado, setModoBorrado] = useState(false);
-
-  const toggleModoBorrado = () => {
-    setModoBorrado((prevState) => !prevState);
-  };
 
   return (
     <>
@@ -238,7 +239,7 @@ const Board = ({ activeChip, chipValue }) => {
               size="3x"
               onClick={toggleModoBorrado}
               className="cross"
-              color={modoBorrado ? "inherit" : "gray"}
+              color={modoBorrado ? "gray" : "inherit"}
             />
           </div>
           <div class="cross-container">
@@ -266,7 +267,8 @@ const Board = ({ activeChip, chipValue }) => {
                     activeChip,
                     chipValue,
                     APUESTAS,
-                    "table0"
+                    "table0",
+                    modoBorrado
                   )}
                 </tbody>
               </table>
@@ -284,7 +286,8 @@ const Board = ({ activeChip, chipValue }) => {
                     activeChip,
                     chipValue,
                     APUESTAS,
-                    "table1"
+                    "table1",
+                    modoBorrado
                   )}
                 </tbody>
               </table>
@@ -307,7 +310,8 @@ const Board = ({ activeChip, chipValue }) => {
                     activeChip,
                     chipValue,
                     APUESTAS,
-                    "table2"
+                    "table2",
+                    modoBorrado
                   )}
                 </tbody>
               </table>
@@ -332,7 +336,8 @@ const Board = ({ activeChip, chipValue }) => {
                   activeChip,
                   chipValue,
                   APUESTAS,
-                  "table3"
+                  "table3",
+                  modoBorrado
                 )}
               </tbody>
             </table>
@@ -347,7 +352,8 @@ const Board = ({ activeChip, chipValue }) => {
                   activeChip,
                   chipValue,
                   APUESTAS,
-                  "table4"
+                  "table4",
+                  modoBorrado
                 )}
               </tbody>
             </table>
