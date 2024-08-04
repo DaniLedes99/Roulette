@@ -194,9 +194,9 @@ const [nextId, setNextId] = useState(1);
 
   const [modoBorrado, setModoBorrado] = useState(false);
 
-const toggleModoBorrado = () => {
-  setModoBorrado(!modoBorrado);
-};
+  const toggleModoBorrado = () => {
+    setModoBorrado(prevState => !prevState);
+  };
 
   return (
     <>
@@ -210,7 +210,7 @@ const toggleModoBorrado = () => {
         <FontAwesomeIcon icon={faArrowRotateRight} onClick={rehacer} disabled={deshechas.length === 0} size="3x" className="cross" color="red"/>
         </div>
         <div class="cross-container">
-        <FontAwesomeIcon icon={faEraser}  size="3x" onClick={toggleModoBorrado} className="cross" />
+        <FontAwesomeIcon icon={faEraser}  size="3x" onClick={toggleModoBorrado} className="cross" color={modoBorrado ? 'inherit' :  'gray'} />
       </div>
       <div class="cross-container">
       <FontAwesomeIcon icon={faXmark}onClick={clearAllChips} className="cross" color="red" size="3x"></FontAwesomeIcon> 
