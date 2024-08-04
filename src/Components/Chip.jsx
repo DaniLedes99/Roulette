@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import ChipItem from "./ChipItem";
 import "./Chip.css";
 
-const Chip = ({ setActiveChip, setActiveChipValue }) => {
-  const [activeChipLocal, setActiveChipLocal] = useState(null); // Estado local para el chip activo
-  const [isFollowing, setIsFollowing] = useState(false); // Estado para verificar si se está siguiendo el cursor
-  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para la posición de la imagen de vista previa
+const Chip = ({ setActiveChip, setChipValue }) => {
+  const [activeChipLocal, setActiveChipLocal] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para el follow
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isFollowing) {
-        setPreviewImagePos({ x: e.clientX, y: e.clientY });
+        setPreviewImagePos({ x: e.clientX, y: e.clientY }); // -22 y -18
       }
     };
 
@@ -21,30 +21,16 @@ const Chip = ({ setActiveChip, setActiveChipValue }) => {
     };
   }, [isFollowing]);
 
-  const handleChipClick = (chipType) => {
+  const handleChipClick = (chipType, value) => {
     if (activeChipLocal === chipType && isFollowing) {
-      setIsFollowing(false); // Desactiva el seguimiento si se hace clic nuevamente en el chip activo
-      setActiveChip(null); // Reinicia el activeChip en el componente padre
-      setActiveChipValue(0);
+      setIsFollowing(false);
+      setActiveChip(null);
+      setChipValue(0);
     } else {
-      setActiveChip(chipType); // Establece el chip activo en el componente padre
-      setActiveChipLocal(chipType); // Establece el chip activo localmente
+      setActiveChip(chipType);
+      setChipValue(value);
+      setActiveChipLocal(chipType);
       setIsFollowing(true);
-      setActiveChipValue(getChipValue(chipType)); // Comienza a seguir el cursor al activar el chip
-    }
-  };
-  const getChipValue = (chipType) => {
-    switch (chipType) {
-      case "Black":
-        return 100;
-      case "Blue":
-        return 25;
-      case "Orange":
-        return 10;
-      case "Purple":
-        return 1;
-      default:
-        return 0;
     }
   };
 
@@ -56,6 +42,7 @@ const Chip = ({ setActiveChip, setActiveChipValue }) => {
         isFollowing={isFollowing}
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
+        value={100}
       />
       <ChipItem
         chipType="Blue"
@@ -63,6 +50,7 @@ const Chip = ({ setActiveChip, setActiveChipValue }) => {
         isFollowing={isFollowing}
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
+        value={25}
       />
       <ChipItem
         chipType="Orange"
@@ -70,6 +58,7 @@ const Chip = ({ setActiveChip, setActiveChipValue }) => {
         isFollowing={isFollowing}
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
+        value={10}
       />
       <ChipItem
         chipType="Purple"
@@ -77,6 +66,7 @@ const Chip = ({ setActiveChip, setActiveChipValue }) => {
         isFollowing={isFollowing}
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
+        value={1}
       />
     </div>
   );

@@ -117,3 +117,62 @@
   height: 120px;
   left: 7px;
 }
+
+.image-default {
+  position: absolute;
+  width: 40px;
+  height: auto;
+}
+
+.image-table0 {
+  top: 45%;
+  left: 35%;
+}
+
+.image-table1 {
+  transform: translateX(-40%) translateY(-40%);
+ 
+}
+
+.image-table2 {
+  transform: translateX(-50%) translateY(-38%);
+
+}
+
+.image-table3 {
+  transform: translateX(-50%) translateY(-50%);
+
+}
+
+.image-table4 {
+  transform: translateX(-50%) translateY(-50%);
+
+}
+
+/* Asegúrate de que el contenedor de la imagen tenga un tamaño definido */
+.cross-container {
+  display: inline-block;
+  overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde del contenedor */
+}
+
+.cross {
+  display: block; /* Elimina el espacio debajo de la imagen */
+  width: 100%; 
+  transition: transform 0.3s ease; /* Transición suave para transformaciones */
+}
+
+/* Agranda la imagen al hacer hover sobre el contenedor */
+.cross-container:hover .cross {
+  transform: scale(1.1); /* Agranda la imagen un 10% */
+}
+
+/* Achica la imagen al hacer clic en el contenedor */
+.cross-container:active .cross {
+  transform: scale(0.9); /* Achica la imagen un 10% */
+}
+
+/* Opcional: para una transición más rápida al hacer clic */
+.cross-container:active .cross {
+  transition: transform 0.1s ease;
+}
+
