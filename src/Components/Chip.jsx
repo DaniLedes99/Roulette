@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import ChipItem from "./ChipItem";
 import "./Chip.css";
 
-const Chip = ({ setActiveChip, setChipValue }) => {
+const Chip = ({ setActiveChip, setChipValue, modoBorrado, setModoBorrado, isFollowing, setIsFollowing }) => {
+
+  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // donde te sigue la ficha?
   const [activeChipLocal, setActiveChipLocal] = useState(null);
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // Estado para el follow
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -22,6 +22,12 @@ const Chip = ({ setActiveChip, setChipValue }) => {
   }, [isFollowing]);
 
   const handleChipClick = (chipType, value) => {
+
+    if(modoBorrado){
+      setModoBorrado(false)
+    }
+
+
     if (activeChipLocal === chipType && isFollowing) {
       setIsFollowing(false);
       setActiveChip(null);

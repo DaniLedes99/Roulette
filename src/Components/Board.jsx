@@ -14,18 +14,20 @@ import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { faEraser } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
-const Board = ({ activeChip, chipValue }) => {
+const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveChip, setIsFollowing }) => {
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [nextId, setNextId] = useState(1);
-  const [modoBorrado, setModoBorrado] = useState(false);
+
 
   const toggleModoBorrado = () => {
+    setActiveChip(null)
+    setIsFollowing(false)
     setModoBorrado((prevState) => !prevState);
   };
 
-  const imagenPos = { x: -1, y: -1 }; // Para almacenar la posición de la imagen
+  const imagenPos = { x: -1, y: -1 }; // Para almacenar la posición de la imagen de la ficha
 
   let APUESTAS = {
     menoresA12: 0,
@@ -178,7 +180,6 @@ const Board = ({ activeChip, chipValue }) => {
                   alt="chip"
                   className={`image-default ${getImageClass(tableId)}`}
                   onClick={(e) => {
-                    e.stopPropagation(); // Evita que el clic en la ficha active la celda
                     if (modoBorrado) {
                       borrarFicha(ficha.id);
                     }

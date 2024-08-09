@@ -8,7 +8,7 @@ import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
 
 function Ruleta() {
-  const [currentNumber, setCurrentNumber] = useState(33); // el número que viene del servidor
+  const [currentNumber, setCurrentNumber] = useState(20); // el número que viene del servidor
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -115,7 +115,6 @@ function Ruleta() {
         <img className="ruleta-contorno3" src={imagenContornoRuleta3} />
         <div
           className={"ball-container"}
-          /*     style={{ transform: "rotate(-0deg)" }} */ //posicion inicial del container de la bola aunque me parece re al pedo esto , pero bueno safe code por si las dudas jejox
         >
           <div
             className={"ball"}

@@ -1,9 +1,3 @@
-/* @media (min-width: 768px) {
-  .Board {
-    width: 50%;
-  }
-} */
-
 .Board-container-main {
   display: flex;
   flex-direction: column;
@@ -20,7 +14,6 @@
   grid-area: 1 / 1; /* Ocupa la primera celda del grid */
   z-index: 1; /* Asegura que la imagen esté por debajo de la tabla */
   max-width: 100%;
-  height: -webkit-fill-available;
 }
 
 .Board-img-down {
