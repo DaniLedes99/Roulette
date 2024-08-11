@@ -9,6 +9,13 @@ import "./Ruleta.css";
 
 function Ruleta() {
   const [currentNumber, setCurrentNumber] = useState(20); // el número que viene del servidor
+
+  useEffect(() => {
+    if (currentNumber !== null) {
+      spinWheel(currentNumber);
+    }
+  }, [currentNumber]);
+
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -16,12 +23,6 @@ function Ruleta() {
 
   const wheelMinNumberOfSpins = 2;
   const wheelMaxNumberOfSpins = 4;
-
-  useEffect(() => {
-    if (currentNumber !== null) {
-      spinWheel(currentNumber);
-    }
-  }, [currentNumber]);
 
   const getRouletteIndexFromNumber = (number) => {
     return RouletteWheelNumbers.indexOf(parseInt(number));
@@ -32,13 +33,6 @@ function Ruleta() {
     return (360 / RouletteWheelNumbers.length) * index;
   };
 
-  const getRandomEndRotation = (minNumberOfSpins, maxNumberOfSpins) => {
-    const rotateTo = anime.random(
-      minNumberOfSpins * RouletteWheelNumbers.length,
-      maxNumberOfSpins * RouletteWheelNumbers.length
-    );
-    return (360 / RouletteWheelNumbers.length) * rotateTo;
-  };
 
   const getZeroEndRotation = (totalRotation) => {
     return 360 - Math.abs(totalRotation % 360);
@@ -48,9 +42,19 @@ function Ruleta() {
     return Math.abs(zeroEndRotation) + getRotationFromNumber(currentNumber);
   };
 
+
+
   const getBallNumberOfRotations = (minNumberOfSpins, maxNumberOfSpins) => {
     const numberOfSpins = anime.random(minNumberOfSpins, maxNumberOfSpins);
     return 360 * numberOfSpins;
+  };
+
+  const getRandomEndRotation = (minNumberOfSpins, maxNumberOfSpins) => {
+    const rotateTo = anime.random(
+      minNumberOfSpins * RouletteWheelNumbers.length,
+      maxNumberOfSpins * RouletteWheelNumbers.length
+    );
+    return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
 
   const spinWheel = (number) => {

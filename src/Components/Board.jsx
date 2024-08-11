@@ -21,6 +21,7 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
   const [nextId, setNextId] = useState(1);
 
 
+
   const toggleModoBorrado = () => {
     setActiveChip(null)
     setIsFollowing(false)
@@ -67,6 +68,52 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
 
   const handleCellClickDownUp = (j, i, chipValue, APUESTAS, tableId) => {
     if (activeChip != null) {
+      let fichaExistente = fichas.find(
+        (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
+      );
+  
+      if (fichaExistente) {
+      // Si ya existe una ficha en la posición, actualiza el valor acumulado
+      const nuevoValor = fichaExistente.chipValue + chipValue;
+
+      // Determina el tipo de chip basado en el nuevo valor acumulado
+      let nuevoChipType = "Purple"; // Color inicial
+      if (nuevoValor > 99) {
+        nuevoChipType = "Black";
+      } else if (nuevoValor > 24) {
+        nuevoChipType = "Blue";
+      } else if (nuevoValor > 9) {
+        nuevoChipType = "Orange";
+      }
+
+      const nuevasFichas = fichas.map((ficha) =>
+        ficha.id === fichaExistente.id
+          ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
+          : ficha
+      );
+      setFichas(nuevasFichas);
+    } else {
+      // Si no existe una ficha en la posición, crea una nueva
+      let nuevoChipType = activeChip; // Utiliza el chipType seleccionado inicialmente
+      if (chipValue > 99) {
+        nuevoChipType = "Black";
+      } else if (chipValue > 24) {
+        nuevoChipType = "Blue";
+      } else if (chipValue > 9) {
+        nuevoChipType = "Orange";
+      }
+
+      setHistorialFichas([...historialFichas, [...fichas]]);
+      setDeshechas([]);
+
+      setFichas([
+        ...fichas,
+        { id: nextId, x: j, y: i, tableId: tableId, chipType: nuevoChipType, chipValue: chipValue },
+      ]);
+      setNextId(nextId + 1);
+    }
+  
+      // Actualiza las apuestas según la fila en la que estás
       switch (j) {
         case 0:
           APUESTAS["menoresA12"] += chipValue;
@@ -81,15 +128,6 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
           console.log("Opción no reconocida");
           break;
       }
-      setHistorialFichas([...historialFichas, [...fichas]]);
-      setDeshechas([]);
-
-      // Añadir una nueva ficha al estado con un id único
-      setFichas([
-        ...fichas,
-        { id: nextId, x: j, y: i, tableId: tableId, chipType: activeChip },
-      ]);
-      setNextId(nextId + 1);
     } else {
       console.log("No se eligió ninguna chip");
     }
@@ -130,6 +168,7 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
     }
   };
 
+console.log(fichas)
   const renderTabla = (
     filas,
     columnas,
@@ -174,6 +213,7 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
                   ficha.x === j && ficha.y === i && ficha.tableId === tableId
               )
               .map((ficha) => (
+                <div className="div-fichas">
                 <img
                   key={ficha.id}
                   src={getChipImage(ficha.chipType)}
@@ -185,6 +225,10 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
                     }
                   }}
                 />
+                <div className="texto-sobre-imagen">
+                  <p>{ficha.chipValue}</p>
+                </div>
+              </div>
               ))}
           </td>
         );
