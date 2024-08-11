@@ -7,39 +7,46 @@ import Black from "../../img/chip_black.png";
 import Blue from "../../img/chip_blue.png";
 import Orange from "../../img/chip_orange.png";
 import Purple from "../../img/chip_purple.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
-import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
-import { faEraser } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
+import Buttons from "./Buttons";
+import { table0, table1, table2, table3, table4 } from "./MedidasTabla";
 
-const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveChip, setIsFollowing }) => {
+const Board = ({
+  activeChip,
+  chipValue,
+  modoBorrado,
+  setModoBorrado,
+  setActiveChip,
+  setIsFollowing,
+}) => {
+  console.log("hola");
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [nextId, setNextId] = useState(1);
-
-
-
-  const toggleModoBorrado = () => {
-    setActiveChip(null)
-    setIsFollowing(false)
-    setModoBorrado((prevState) => !prevState);
-  };
-
-  const imagenPos = { x: -1, y: -1 }; // Para almacenar la posición de la imagen de la ficha
-
-  let APUESTAS = {
+  const [APUESTAS, setAPUESTAS] = useState({
     menoresA12: 0,
     entre12y24: 0,
     entre24y36: 0,
+    primeraFila: 0,
+    segundaFila: 0,
+    terceraFila: 0,
+    igualOMenorA18: 0,
+    igualOMayorA19: 0,
     par: 0,
     impar: 0,
     rojo: 0,
     negro: 0,
     cero: 0,
+  });
+
+  const toggleModoBorrado = () => {
+    setActiveChip(null);
+    setIsFollowing(false);
+    setModoBorrado((prevState) => !prevState);
   };
+
+  const imagenPos = { x: -1, y: -1 }; // Para almacenar la posición de la imagen de la ficha
 
   const getChipImage = (chipType) => {
     switch (chipType) {
@@ -66,109 +73,101 @@ const Board = ({ activeChip, chipValue, modoBorrado, setModoBorrado, setActiveCh
     setFichas(nuevasFichas);
   };
 
-  const handleCellClickDownUp = (j, i, chipValue, APUESTAS, tableId) => {
+  const handleCellClickDownUp = (j, i, chipValue, tableId) => {
     if (activeChip != null) {
       let fichaExistente = fichas.find(
         (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
       );
-  
+
+      setAPUESTAS((prevAPUESTAS) => {
+        const newAPUESTAS = { ...prevAPUESTAS };
+        switch (j) {
+          case 0:
+            newAPUESTAS.menoresA12 += chipValue;
+
+            break;
+          case 1:
+            newAPUESTAS.entre12y24 += chipValue;
+            break;
+          case 2:
+            newAPUESTAS.entre24y36 += chipValue;
+            break;
+          default:
+            /*      console.log("Opción no reconocida"); */
+            break;
+        }
+        return newAPUESTAS;
+      });
+
       if (fichaExistente) {
-      // Si ya existe una ficha en la posición, actualiza el valor acumulado
-      const nuevoValor = fichaExistente.chipValue + chipValue;
+        const nuevoValor = fichaExistente.chipValue + chipValue;
 
-      // Determina el tipo de chip basado en el nuevo valor acumulado
-      let nuevoChipType = "Purple"; // Color inicial
-      if (nuevoValor > 99) {
-        nuevoChipType = "Black";
-      } else if (nuevoValor > 24) {
-        nuevoChipType = "Blue";
-      } else if (nuevoValor > 9) {
-        nuevoChipType = "Orange";
-      }
+        let nuevoChipType = "Purple";
+        if (nuevoValor > 99) {
+          nuevoChipType = "Black";
+        } else if (nuevoValor > 24) {
+          nuevoChipType = "Blue";
+        } else if (nuevoValor > 9) {
+          nuevoChipType = "Orange";
+        }
 
-      const nuevasFichas = fichas.map((ficha) =>
-        ficha.id === fichaExistente.id
-          ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
-          : ficha
-      );
-      setFichas(nuevasFichas);
-    } else {
-      // Si no existe una ficha en la posición, crea una nueva
-      let nuevoChipType = activeChip; // Utiliza el chipType seleccionado inicialmente
-      if (chipValue > 99) {
-        nuevoChipType = "Black";
-      } else if (chipValue > 24) {
-        nuevoChipType = "Blue";
-      } else if (chipValue > 9) {
-        nuevoChipType = "Orange";
-      }
+        const nuevasFichas = fichas.map((ficha) =>
+          ficha.id === fichaExistente.id
+            ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
+            : ficha
+        );
+        setFichas(nuevasFichas);
+      } else {
+        let nuevoChipType = activeChip;
+        if (chipValue > 99) {
+          nuevoChipType = "Black";
+        } else if (chipValue > 24) {
+          nuevoChipType = "Blue";
+        } else if (chipValue > 9) {
+          nuevoChipType = "Orange";
+        }
 
-      setHistorialFichas([...historialFichas, [...fichas]]);
-      setDeshechas([]);
+        setHistorialFichas([...historialFichas, [...fichas]]);
+        setDeshechas([]);
 
-      setFichas([
-        ...fichas,
-        { id: nextId, x: j, y: i, tableId: tableId, chipType: nuevoChipType, chipValue: chipValue },
-      ]);
-      setNextId(nextId + 1);
-    }
-  
-      // Actualiza las apuestas según la fila en la que estás
-      switch (j) {
-        case 0:
-          APUESTAS["menoresA12"] += chipValue;
-          break;
-        case 1:
-          APUESTAS["entre12y24"] += chipValue;
-          break;
-        case 2:
-          APUESTAS["entre24y36"] += chipValue;
-          break;
-        default:
-          console.log("Opción no reconocida");
-          break;
+        setFichas([
+          ...fichas,
+          {
+            id: nextId,
+            x: j,
+            y: i,
+            tableId: tableId,
+            chipType: nuevoChipType,
+            chipValue: chipValue,
+          },
+        ]);
+        setNextId(nextId + 1);
       }
     } else {
       console.log("No se eligió ninguna chip");
     }
   };
 
+  console.log(APUESTAS);
+
   const deshacer = () => {
     if (historialFichas.length > 0) {
-      const estadoAnterior = historialFichas.pop(); // Obtener el estado anterior
-      setDeshechas([...deshechas, [...fichas]]); // Guardar el estado actual en deshechas
-      setFichas(estadoAnterior); // Restaurar el estado anterior
-      setHistorialFichas([...historialFichas]); // Actualizar el historial
+      const estadoAnterior = historialFichas.pop();
+      setDeshechas([...deshechas, [...fichas]]);
+      setFichas(estadoAnterior);
+      setHistorialFichas([...historialFichas]);
     }
   };
 
   const rehacer = () => {
     if (deshechas.length > 0) {
-      const estadoRehecho = deshechas.pop(); // Obtener el estado rehecho
-      setHistorialFichas([...historialFichas, [...fichas]]); // Guardar el estado actual en historial
-      setFichas(estadoRehecho); // Restaurar el estado rehecho
-      setDeshechas([...deshechas]); // Actualizar la pila de deshechas
+      const estadoRehecho = deshechas.pop();
+      setHistorialFichas([...historialFichas, [...fichas]]);
+      setFichas(estadoRehecho);
+      setDeshechas([...deshechas]);
     }
   };
 
-  const getImageClass = (tableId) => {
-    switch (tableId) {
-      case "table0":
-        return "image-table0";
-      case "table1":
-        return "image-table1";
-      case "table2":
-        return "image-table2";
-      case "table3":
-        return "image-table3";
-      case "table4":
-        return "image-table4";
-      default:
-        return "";
-    }
-  };
-
-console.log(fichas)
   const renderTabla = (
     filas,
     columnas,
@@ -177,7 +176,6 @@ console.log(fichas)
     functionasociate,
     activeChip,
     chipValue,
-    APUESTAS,
     tableId,
     modoBorrado
   ) => {
@@ -194,7 +192,7 @@ console.log(fichas)
               padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
               position: "relative",
             }}
-            onClick={() => functionasociate(j, i, chipValue, APUESTAS, tableId)}
+            onClick={() => functionasociate(j, i, chipValue, tableId)}
           >
             {imagenPos.x === j &&
               imagenPos.y === i &&
@@ -203,7 +201,7 @@ console.log(fichas)
                 <img
                   src={getChipImage(activeChip)}
                   alt="chip"
-                  className={`image-default ${getImageClass(tableId)}`}
+                  className="image-default"
                 />
               )}
 
@@ -214,21 +212,21 @@ console.log(fichas)
               )
               .map((ficha) => (
                 <div className="div-fichas">
-                <img
-                  key={ficha.id}
-                  src={getChipImage(ficha.chipType)}
-                  alt="chip"
-                  className={`image-default ${getImageClass(tableId)}`}
-                  onClick={(e) => {
-                    if (modoBorrado) {
-                      borrarFicha(ficha.id);
-                    }
-                  }}
-                />
-                <div className="texto-sobre-imagen">
-                  <p>{ficha.chipValue}</p>
+                  <img
+                    key={ficha.id}
+                    src={getChipImage(ficha.chipType)}
+                    alt="chip"
+                    className="image-default"
+                    onClick={(e) => {
+                      if (modoBorrado) {
+                        borrarFicha(ficha.id);
+                      }
+                    }}
+                  />
+                  <div className="texto-sobre-imagen">
+                    <p>{ficha.chipValue}</p>
+                  </div>
                 </div>
-              </div>
               ))}
           </td>
         );
@@ -238,65 +236,18 @@ console.log(fichas)
     return tabla;
   };
 
-  const firstValue = 30;
-  const lastValue = 26;
-  const newArray = [];
-
-  newArray.push(firstValue);
-
-  const values = [4, 26];
-  for (let i = 0; i < 21; i++) {
-    newArray.push(values[i % 2]);
-  }
-
-  newArray.push(lastValue);
-
   return (
     <>
       <div className="Board-container-main">
-        <div className="buttons-container">
-          <p>
-            Chip: {activeChip} {chipValue}
-          </p>
-          <div class="cross-container">
-            <FontAwesomeIcon
-              onClick={deshacer}
-              disabled={historialFichas.length === 0}
-              icon={faArrowRotateLeft}
-              size="3x"
-              className="cross"
-              color="red"
-            />
-          </div>
-          <div class="cross-container">
-            <FontAwesomeIcon
-              icon={faArrowRotateRight}
-              onClick={rehacer}
-              disabled={deshechas.length === 0}
-              size="3x"
-              className="cross"
-              color="red"
-            />
-          </div>
-          <div class="cross-container">
-            <FontAwesomeIcon
-              icon={faEraser}
-              size="3x"
-              onClick={toggleModoBorrado}
-              className="cross"
-              color={modoBorrado ? "gray" : "inherit"}
-            />
-          </div>
-          <div class="cross-container">
-            <FontAwesomeIcon
-              icon={faXmark}
-              onClick={clearAllChips}
-              className="cross"
-              color="red"
-              size="3x"
-            ></FontAwesomeIcon>
-          </div>
-        </div>
+        <Buttons
+          deshacer={deshacer}
+          rehacer={rehacer}
+          toggleModoBorrado={toggleModoBorrado}
+          clearAllChips={clearAllChips}
+          modoBorrado={modoBorrado}
+          historialFichas={historialFichas}
+          deshechas={deshechas}
+        />
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
@@ -304,14 +255,14 @@ console.log(fichas)
               <table className="Tabla">
                 <tbody>
                   {renderTabla(
-                    1,
-                    1,
-                    [133],
-                    [40],
+                    table0.cantidadDeFilas,
+                    table0.cantidadDeColumnas,
+                    table0.anchoDeFilas,
+                    table0.anchoDeColumnas,
+
                     handleCellClickDownUp,
                     activeChip,
                     chipValue,
-                    APUESTAS,
                     "table0",
                     modoBorrado
                   )}
@@ -323,14 +274,13 @@ console.log(fichas)
               <table className="Tabla">
                 <tbody>
                   {renderTabla(
-                    5,
-                    24,
-                    [42, 8, 34, 8, 38],
-                    newArray,
+                    table1.cantidadDeFilas,
+                    table1.cantidadDeColumnas,
+                    table1.anchoDeFilas,
+                    table1.anchoDeColumnas,
                     handleCellClickDownUp,
                     activeChip,
                     chipValue,
-                    APUESTAS,
                     "table1",
                     modoBorrado
                   )}
@@ -347,14 +297,13 @@ console.log(fichas)
               <table className="Tabla">
                 <tbody>
                   {renderTabla(
-                    3,
-                    1,
-                    [46, 42, 44],
-                    [37],
+                    table2.cantidadDeFilas,
+                    table2.cantidadDeColumnas,
+                    table2.anchoDeFilas,
+                    table2.anchoDeColumnas,
                     handleCellClickDownUp,
                     activeChip,
                     chipValue,
-                    APUESTAS,
                     "table2",
                     modoBorrado
                   )}
@@ -373,14 +322,13 @@ console.log(fichas)
             <table className="Tabla-down">
               <tbody>
                 {renderTabla(
-                  1,
-                  3,
-                  [25],
-                  [41.5, 41.5, 42],
+                  table3.cantidadDeFilas,
+                  table3.cantidadDeColumnas,
+                  table3.anchoDeFilas,
+                  table3.anchoDeColumnas,
                   handleCellClickDownUp,
                   activeChip,
                   chipValue,
-                  APUESTAS,
                   "table3",
                   modoBorrado
                 )}
@@ -389,14 +337,13 @@ console.log(fichas)
             <table className="Tabla-down">
               <tbody>
                 {renderTabla(
-                  1,
-                  6,
-                  [32],
-                  [21.5, 20.5, 21, 20.5, 21, 21],
+                  table4.cantidadDeFilas,
+                  table4.cantidadDeColumnas,
+                  table4.anchoDeFilas,
+                  table4.anchoDeColumnas,
                   handleCellClickDownUp,
                   activeChip,
                   chipValue,
-                  APUESTAS,
                   "table4",
                   modoBorrado
                 )}

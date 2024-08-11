@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState} from "react";
 import "./App.css";
 import Ruleta from "./Components/Ruleta";
 import Board from "./Components/Board";
@@ -10,8 +10,6 @@ function App() {
   const [chipValue, setChipValue] = useState(0);
   const [modoBorrado, setModoBorrado] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-
- console.log(isFollowing)
 
   return (
     <>

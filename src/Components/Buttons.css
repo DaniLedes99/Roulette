@@ -1,0 +1,25 @@
+.cross-container {
+    display: inline-block;
+    overflow: hidden; /* Oculta cualquier parte de la imagen que se desborde del contenedor */
+  }
+  
+  .cross {
+    display: block; /* Elimina el espacio debajo de la imagen */
+    width: 100%; 
+    transition: transform 0.3s ease; /* Transición suave para transformaciones */
+  }
+  
+  /* Agranda la imagen al hacer hover sobre el contenedor */
+  .cross-container:hover .cross {
+    transform: scale(1.1); /* Agranda la imagen un 10% */
+  }
+  
+  /* Achica la imagen al hacer clic en el contenedor */
+  .cross-container:active .cross {
+    transform: scale(0.9); /* Achica la imagen un 10% */
+  }
+  
+  /* Opcional: para una transición más rápida al hacer clic */
+  .cross-container:active .cross {
+    transition: transform 0.1s ease;
+  }
