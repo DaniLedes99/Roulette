@@ -19,12 +19,12 @@ const Board = ({
   setActiveChip,
   setIsFollowing,
 }) => {
+  console.log("hola");
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [nextId, setNextId] = useState(1);
-
-  let APUESTAS = {
+  const [APUESTAS, setAPUESTAS] = useState({
     menoresA12: 0,
     entre12y24: 0,
     entre24y36: 0,
@@ -38,7 +38,7 @@ const Board = ({
     rojo: 0,
     negro: 0,
     cero: 0,
-  };
+  });
 
   const toggleModoBorrado = () => {
     setActiveChip(null);
@@ -78,20 +78,26 @@ const Board = ({
       let fichaExistente = fichas.find(
         (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
       );
-      switch (j) {
-        case 0:
-          APUESTAS["menoresA12"] += chipValue;
-          break;
-        case 1:
-          APUESTAS["entre12y24"] += chipValue;
-          break;
-        case 2:
-          APUESTAS["entre24y36"] += chipValue;
-          break;
-        default:
-          console.log("Opción no reconocida");
-          break;
-      }
+
+      setAPUESTAS((prevAPUESTAS) => {
+        const newAPUESTAS = { ...prevAPUESTAS };
+        switch (j) {
+          case 0:
+            newAPUESTAS.menoresA12 += chipValue;
+
+            break;
+          case 1:
+            newAPUESTAS.entre12y24 += chipValue;
+            break;
+          case 2:
+            newAPUESTAS.entre24y36 += chipValue;
+            break;
+          default:
+            /*      console.log("Opción no reconocida"); */
+            break;
+        }
+        return newAPUESTAS;
+      });
 
       if (fichaExistente) {
         const nuevoValor = fichaExistente.chipValue + chipValue;
@@ -141,6 +147,8 @@ const Board = ({
       console.log("No se eligió ninguna chip");
     }
   };
+
+  console.log(APUESTAS);
 
   const deshacer = () => {
     if (historialFichas.length > 0) {
@@ -251,6 +259,7 @@ const Board = ({
                     table0.cantidadDeColumnas,
                     table0.anchoDeFilas,
                     table0.anchoDeColumnas,
+
                     handleCellClickDownUp,
                     activeChip,
                     chipValue,
