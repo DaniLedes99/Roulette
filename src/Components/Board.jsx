@@ -10,6 +10,7 @@ import Purple from "../../img/chip_purple.png";
 import React, { useState } from "react";
 import Buttons from "./Buttons";
 import { table0, table1, table2, table3, table4 } from "./MedidasTabla";
+import { INITIAL_VALUES_APUESTAS } from "./BoardService";
 
 const Board = ({
   activeChip,
@@ -19,26 +20,11 @@ const Board = ({
   setActiveChip,
   setIsFollowing,
 }) => {
-  console.log("hola");
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [nextId, setNextId] = useState(1);
-  const [APUESTAS, setAPUESTAS] = useState({
-    menoresA12: 0,
-    entre12y24: 0,
-    entre24y36: 0,
-    primeraFila: 0,
-    segundaFila: 0,
-    terceraFila: 0,
-    igualOMenorA18: 0,
-    igualOMayorA19: 0,
-    par: 0,
-    impar: 0,
-    rojo: 0,
-    negro: 0,
-    cero: 0,
-  });
+  const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
 
   const toggleModoBorrado = () => {
     setActiveChip(null);
@@ -65,96 +51,569 @@ const Board = ({
 
   const clearAllChips = () => {
     setFichas([]);
+    setAPUESTAS(INITIAL_VALUES_APUESTAS);
   };
 
   const borrarFicha = (id) => {
-    // Filtrar las fichas para eliminar la ficha con el id especificado
-    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
-    setFichas(nuevasFichas);
-  };
+    const fichaAEliminar = fichas.find((ficha) => ficha.id === id);
 
-  const handleCellClickDownUp = (j, i, chipValue, tableId) => {
-    if (activeChip != null) {
-      let fichaExistente = fichas.find(
-        (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
-      );
-
+    if (fichaAEliminar) {
       setAPUESTAS((prevAPUESTAS) => {
         const newAPUESTAS = { ...prevAPUESTAS };
-        switch (j) {
-          case 0:
-            newAPUESTAS.menoresA12 += chipValue;
 
+        switch (fichaAEliminar.x) {
+          case 0:
+            newAPUESTAS.menoresA12 -= fichaAEliminar.chipValue;
             break;
           case 1:
-            newAPUESTAS.entre12y24 += chipValue;
+            newAPUESTAS.entre12y24 -= fichaAEliminar.chipValue;
             break;
           case 2:
-            newAPUESTAS.entre24y36 += chipValue;
-            break;
-          default:
-            /*      console.log("Opción no reconocida"); */
+            newAPUESTAS.entre24y36 -= fichaAEliminar.chipValue;
             break;
         }
         return newAPUESTAS;
       });
 
-      if (fichaExistente) {
-        const nuevoValor = fichaExistente.chipValue + chipValue;
+      const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+      setFichas(nuevasFichas);
+    }
+  };
 
-        let nuevoChipType = "Purple";
-        if (nuevoValor > 99) {
-          nuevoChipType = "Black";
-        } else if (nuevoValor > 24) {
-          nuevoChipType = "Blue";
-        } else if (nuevoValor > 9) {
-          nuevoChipType = "Orange";
-        }
+  const handleCellClickDownUp = (j, i, chipValue, tableId) => {
+    if (activeChip != null) {
+      if (tableId == "table0") {
+        setAPUESTAS((prevAPUESTAS) => {
+          const newAPUESTAS = { ...prevAPUESTAS };
 
-        const nuevasFichas = fichas.map((ficha) =>
-          ficha.id === fichaExistente.id
-            ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
-            : ficha
-        );
-        setFichas(nuevasFichas);
-      } else {
-        let nuevoChipType = activeChip;
-        if (chipValue > 99) {
-          nuevoChipType = "Black";
-        } else if (chipValue > 24) {
-          nuevoChipType = "Blue";
-        } else if (chipValue > 9) {
-          nuevoChipType = "Orange";
-        }
+          newAPUESTAS.cero += chipValue;
 
-        setHistorialFichas([...historialFichas, [...fichas]]);
-        setDeshechas([]);
-
-        setFichas([
-          ...fichas,
-          {
-            id: nextId,
-            x: j,
-            y: i,
-            tableId: tableId,
-            chipType: nuevoChipType,
-            chipValue: chipValue,
-          },
-        ]);
-        setNextId(nextId + 1);
+          return newAPUESTAS;
+        });
       }
+
+      if (tableId == "table1") {
+        setAPUESTAS((prevAPUESTAS) => {
+          const newAPUESTAS = { ...prevAPUESTAS };
+
+          if (i === 0) {
+            switch (j) {
+              case 0:
+                newAPUESTAS[3] += chipValue;
+                break;
+              case 1:
+                newAPUESTAS["3y6"] += chipValue;
+                break;
+              case 2:
+                newAPUESTAS[6] += chipValue;
+                break;
+              case 3:
+                newAPUESTAS["6y9"] += chipValue;
+                break;
+              case 4:
+                newAPUESTAS[9] += chipValue;
+                break;
+              case 5:
+                newAPUESTAS["9y12"] += chipValue;
+                break;
+              case 6:
+                newAPUESTAS[12] += chipValue;
+                break;
+              case 7:
+                newAPUESTAS["12y15"] += chipValue;
+                break;
+              case 8:
+                newAPUESTAS[15] += chipValue;
+                break;
+              case 9:
+                newAPUESTAS["15y18"] += chipValue;
+                break;
+              case 10:
+                newAPUESTAS[18] += chipValue;
+                break;
+              case 11:
+                newAPUESTAS["18y21"] += chipValue;
+                break;
+              case 12:
+                newAPUESTAS[21] += chipValue;
+                break;
+              case 13:
+                newAPUESTAS["21y24"] += chipValue;
+                break;
+              case 14:
+                newAPUESTAS[24] += chipValue;
+                break;
+              case 15:
+                newAPUESTAS["24y27"] += chipValue;
+                break;
+              case 16:
+                newAPUESTAS[27] += chipValue;
+                break;
+              case 17:
+                newAPUESTAS["27y30"] += chipValue;
+                break;
+              case 18:
+                newAPUESTAS[30] += chipValue;
+                break;
+              case 19:
+                newAPUESTAS["30y33"] += chipValue;
+                break;
+              case 20:
+                newAPUESTAS[33] += chipValue;
+                break;
+              case 21:
+                newAPUESTAS["33y36"] += chipValue;
+                break;
+              case 22:
+                newAPUESTAS[36] += chipValue;
+                break;
+              default:
+                console.log("Columna no reconocida");
+                break;
+            }
+          }
+          if (i === 1) {
+            switch (j) {
+              case 0:
+                newAPUESTAS["2y3"] += chipValue;
+                console.log(chipValue);
+                console.log(newAPUESTAS["2y3"]);
+
+                break;
+              case 1:
+                newAPUESTAS["2y3y5y6"] += chipValue;
+                break;
+              case 2:
+                newAPUESTAS["5y6"] += chipValue;
+                break;
+              case 3:
+                newAPUESTAS["5y6y8y9"] += chipValue;
+                break;
+              case 4:
+                newAPUESTAS["8y9"] += chipValue;
+                break;
+              case 5:
+                newAPUESTAS["8y9y11y12"] += chipValue;
+                break;
+              case 6:
+                newAPUESTAS["11y12"] += chipValue;
+                break;
+              case 7:
+                newAPUESTAS["11y12y14y15"] += chipValue;
+                break;
+              case 8:
+                newAPUESTAS["14y15"] += chipValue;
+                break;
+              case 9:
+                newAPUESTAS["14y15y17y18"] += chipValue;
+                break;
+              case 10:
+                newAPUESTAS["17y18"] += chipValue;
+                break;
+              case 11:
+                newAPUESTAS["17y18y20y21"] += chipValue;
+                break;
+              case 12:
+                newAPUESTAS["20y21"] += chipValue;
+                break;
+              case 13:
+                newAPUESTAS["20y21y23y24"] += chipValue;
+                break;
+              case 14:
+                newAPUESTAS["23y24"] += chipValue;
+                break;
+              case 15:
+                newAPUESTAS["23y24y26y27"] += chipValue;
+                break;
+              case 16:
+                newAPUESTAS["26y27"] += chipValue;
+                break;
+              case 17:
+                newAPUESTAS["26y27y29y30"] += chipValue;
+                break;
+              case 18:
+                newAPUESTAS["29y30"] += chipValue;
+                break;
+              case 19:
+                newAPUESTAS["29y30y32y33"] += chipValue;
+                break;
+              case 20:
+                newAPUESTAS["32y33"] += chipValue;
+                break;
+              case 21:
+                newAPUESTAS["32y33y35y36"] += chipValue;
+                break;
+              case 22:
+                newAPUESTAS["35y36"] += chipValue;
+                break;
+              default:
+                console.log("Opción no reconocida");
+                break;
+            }
+          }
+          if (i === 2) {
+            switch (j) {
+              case 0:
+                newAPUESTAS["2"] += chipValue;
+                break;
+              case 1:
+                newAPUESTAS["2y5"] += chipValue;
+                break;
+              case 2:
+                newAPUESTAS["5"] += chipValue;
+                break;
+              case 3:
+                newAPUESTAS["5y8"] += chipValue;
+                break;
+              case 4:
+                newAPUESTAS["8"] += chipValue;
+                break;
+              case 5:
+                newAPUESTAS["8y11"] += chipValue;
+                break;
+              case 6:
+                newAPUESTAS["11"] += chipValue;
+                break;
+              case 7:
+                newAPUESTAS["11y14"] += chipValue;
+                break;
+              case 8:
+                newAPUESTAS["14"] += chipValue;
+                break;
+              case 9:
+                newAPUESTAS["14y17"] += chipValue;
+                break;
+              case 10:
+                newAPUESTAS["17"] += chipValue;
+                break;
+              case 11:
+                newAPUESTAS["17y20"] += chipValue;
+                break;
+              case 12:
+                newAPUESTAS["20"] += chipValue;
+                break;
+              case 13:
+                newAPUESTAS["20y23"] += chipValue;
+                break;
+              case 14:
+                newAPUESTAS["23"] += chipValue;
+                break;
+              case 15:
+                newAPUESTAS["23y26"] += chipValue;
+                break;
+              case 16:
+                newAPUESTAS["26"] += chipValue;
+                break;
+              case 17:
+                newAPUESTAS["26y29"] += chipValue;
+                break;
+              case 18:
+                newAPUESTAS["29"] += chipValue;
+                break;
+              case 19:
+                newAPUESTAS["29y32"] += chipValue;
+                break;
+              case 20:
+                newAPUESTAS["32"] += chipValue;
+                break;
+              case 21:
+                newAPUESTAS["32y35"] += chipValue;
+                break;
+              case 22:
+                newAPUESTAS["35"] += chipValue;
+                break;
+              default:
+                console.log("Opción no reconocida");
+                break;
+            }
+          }
+          if (i === 3) {
+            switch (j) {
+              case 0:
+                newAPUESTAS["1y2"] += chipValue;
+                break;
+              case 1:
+                newAPUESTAS["1y2y4y5"] += chipValue;
+                break;
+              case 2:
+                newAPUESTAS["4y5"] += chipValue;
+                break;
+              case 3:
+                newAPUESTAS["4y5y7y8"] += chipValue;
+                break;
+              case 4:
+                newAPUESTAS["7y8"] += chipValue;
+                break;
+              case 5:
+                newAPUESTAS["7y8y10y11"] += chipValue;
+                break;
+              case 6:
+                newAPUESTAS["10y11"] += chipValue;
+                break;
+              case 7:
+                newAPUESTAS["10y11y13y14"] += chipValue;
+                break;
+              case 8:
+                newAPUESTAS["13y14"] += chipValue;
+                break;
+              case 9:
+                newAPUESTAS["13y14y16y17"] += chipValue;
+                break;
+              case 10:
+                newAPUESTAS["16y17"] += chipValue;
+                break;
+              case 11:
+                newAPUESTAS["16y17y19y20"] += chipValue;
+                break;
+              case 12:
+                newAPUESTAS["19y20"] += chipValue;
+                break;
+              case 13:
+                newAPUESTAS["19y20y22y23"] += chipValue;
+                break;
+              case 14:
+                newAPUESTAS["22y23y25y26"] += chipValue;
+                break;
+              case 15:
+                newAPUESTAS["25y26"] += chipValue;
+                break;
+              case 16:
+                newAPUESTAS["25y26y28y29"] += chipValue;
+                break;
+              case 17:
+                newAPUESTAS["28y29"] += chipValue;
+                break;
+              case 18:
+                newAPUESTAS["28y29y31y32"] += chipValue;
+                break;
+              case 19:
+                newAPUESTAS["31y32"] += chipValue;
+                break;
+              case 20:
+                newAPUESTAS["31y32y34y35"] += chipValue;
+                break;
+              case 21:
+                newAPUESTAS["34y35"] += chipValue;
+                break;
+              default:
+                console.log("Opción no reconocida");
+                break;
+            }
+          }
+
+          if (i === 4) {
+            switch (j) {
+              case 0:
+                newAPUESTAS["1"] += chipValue;
+                break;
+              case 1:
+                newAPUESTAS["1y4"] += chipValue;
+                break;
+              case 2:
+                newAPUESTAS["4"] += chipValue;
+                break;
+              case 3:
+                newAPUESTAS["4y7"] += chipValue;
+                break;
+              case 4:
+                newAPUESTAS["7"] += chipValue;
+                break;
+              case 5:
+                newAPUESTAS["7y10"] += chipValue;
+                break;
+              case 6:
+                newAPUESTAS["10"] += chipValue;
+                break;
+              case 7:
+                newAPUESTAS["10y13"] += chipValue;
+                break;
+              case 8:
+                newAPUESTAS["13"] += chipValue;
+                break;
+              case 9:
+                newAPUESTAS["13y16"] += chipValue;
+                break;
+              case 10:
+                newAPUESTAS["16"] += chipValue;
+                break;
+              case 11:
+                newAPUESTAS["16y19"] += chipValue;
+                break;
+              case 12:
+                newAPUESTAS["19"] += chipValue;
+                break;
+              case 13:
+                newAPUESTAS["19y22"] += chipValue;
+                break;
+              case 14:
+                newAPUESTAS["22"] += chipValue;
+                break;
+              case 15:
+                newAPUESTAS["22y25"] += chipValue;
+                break;
+              case 16:
+                newAPUESTAS["25"] += chipValue;
+                break;
+              case 17:
+                newAPUESTAS["25y28"] += chipValue;
+                break;
+              case 18:
+                newAPUESTAS["28"] += chipValue;
+                break;
+              case 19:
+                newAPUESTAS["28y31"] += chipValue;
+                break;
+              case 20:
+                newAPUESTAS["31"] += chipValue;
+                break;
+              case 21:
+                newAPUESTAS["31y34"] += chipValue;
+                break;
+              case 22:
+                newAPUESTAS["34"] += chipValue;
+                break;
+              default:
+                console.log("Opción no reconocida");
+                break;
+            }
+          }
+
+          return newAPUESTAS;
+        });
+      }
+
+      if (tableId == "table2") {
+        setAPUESTAS((prevAPUESTAS) => {
+          const newAPUESTAS = { ...prevAPUESTAS };
+          switch (i) {
+            case 0:
+              newAPUESTAS.primeraFila += chipValue;
+              break;
+            case 1:
+              newAPUESTAS.segundaFila += chipValue;
+              break;
+            case 2:
+              newAPUESTAS.terceraFila += chipValue;
+              break;
+            default:
+              console.log("Opción no reconocida");
+              break;
+          }
+          return newAPUESTAS;
+        });
+      }
+
+      if (tableId == "table3") {
+        setAPUESTAS((prevAPUESTAS) => {
+          const newAPUESTAS = { ...prevAPUESTAS };
+          switch (j) {
+            case 0:
+              newAPUESTAS.menoresA12 += chipValue;
+              break;
+            case 1:
+              newAPUESTAS.entre12y24 += chipValue;
+              break;
+            case 2:
+              newAPUESTAS.entre24y36 += chipValue;
+              break;
+            default:
+              console.log("Opción no reconocida");
+              break;
+          }
+          return newAPUESTAS;
+        });
+      }
+      if (tableId == "table4") {
+        setAPUESTAS((prevAPUESTAS) => {
+          const newAPUESTAS = { ...prevAPUESTAS };
+          switch (j) {
+            case 0:
+              newAPUESTAS.igualOMenorA18 += chipValue;
+              break;
+            case 1:
+              newAPUESTAS.par += chipValue;
+              break;
+            case 2:
+              newAPUESTAS.rojo += chipValue;
+              break;
+            case 3:
+              newAPUESTAS.negro += chipValue;
+              break;
+            case 4:
+              newAPUESTAS.impar += chipValue;
+              break;
+            case 5:
+              newAPUESTAS.igualOMayorA19 += chipValue;
+              break;
+            default:
+              console.log("Opción no reconocida");
+              break;
+          }
+          return newAPUESTAS;
+        });
+      }
+      settearPosiciónFicha(j, i, chipValue, tableId);
     } else {
       console.log("No se eligió ninguna chip");
     }
   };
 
-  console.log(APUESTAS);
+  const settearPosiciónFicha = (j, i, chipValue, tableId) => {
+    let fichaExistente = fichas.find(
+      (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
+    );
+    if (fichaExistente) {
+      const nuevoValor = fichaExistente.chipValue + chipValue;
+
+      let nuevoChipType = "Purple";
+      if (nuevoValor > 99) {
+        nuevoChipType = "Black";
+      } else if (nuevoValor > 24) {
+        nuevoChipType = "Blue";
+      } else if (nuevoValor > 9) {
+        nuevoChipType = "Orange";
+      }
+
+      const nuevasFichas = fichas.map((ficha) =>
+        ficha.id === fichaExistente.id
+          ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
+          : ficha
+      );
+      setFichas(nuevasFichas);
+    } else {
+      let nuevoChipType = activeChip;
+      if (chipValue > 99) {
+        nuevoChipType = "Black";
+      } else if (chipValue > 24) {
+        nuevoChipType = "Blue";
+      } else if (chipValue > 9) {
+        nuevoChipType = "Orange";
+      }
+
+      setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
+      setDeshechas([]);
+
+      setFichas([
+        ...fichas,
+        {
+          id: nextId,
+          x: j,
+          y: i,
+          tableId: tableId,
+          chipType: nuevoChipType,
+          chipValue: chipValue,
+        },
+      ]);
+      setNextId(nextId + 1);
+    }
+  };
 
   const deshacer = () => {
     if (historialFichas.length > 0) {
       const estadoAnterior = historialFichas.pop();
-      setDeshechas([...deshechas, [...fichas]]);
-      setFichas(estadoAnterior);
+      setDeshechas([...deshechas, { fichas: fichas, apuestas: APUESTAS }]);
+      setFichas(estadoAnterior.fichas);
+      setAPUESTAS(estadoAnterior.apuestas);
       setHistorialFichas([...historialFichas]);
     }
   };
@@ -162,11 +621,18 @@ const Board = ({
   const rehacer = () => {
     if (deshechas.length > 0) {
       const estadoRehecho = deshechas.pop();
-      setHistorialFichas([...historialFichas, [...fichas]]);
-      setFichas(estadoRehecho);
+      setHistorialFichas([
+        ...historialFichas,
+        { fichas: fichas, apuestas: APUESTAS },
+      ]);
+      setFichas(estadoRehecho.fichas);
+      setAPUESTAS(estadoRehecho.apuestas);
       setDeshechas([...deshechas]);
     }
   };
+
+  console.log(APUESTAS);
+  //el apuestas en historial de fichas espera a q gregues una nueva ficha en un lugar distinto para actualizar su valor, no condiciona el funcionamiento de la ruleta pero ni idea por qué pasa
 
   const renderTabla = (
     filas,
@@ -259,7 +725,6 @@ const Board = ({
                     table0.cantidadDeColumnas,
                     table0.anchoDeFilas,
                     table0.anchoDeColumnas,
-
                     handleCellClickDownUp,
                     activeChip,
                     chipValue,

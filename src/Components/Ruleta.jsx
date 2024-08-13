@@ -8,7 +8,7 @@ import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
 
 function Ruleta() {
-  const [currentNumber, setCurrentNumber] = useState(20); // el número que viene del servidor
+  const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
 
   useEffect(() => {
     if (currentNumber !== null) {
@@ -33,7 +33,6 @@ function Ruleta() {
     return (360 / RouletteWheelNumbers.length) * index;
   };
 
-
   const getZeroEndRotation = (totalRotation) => {
     return 360 - Math.abs(totalRotation % 360);
   };
@@ -41,8 +40,6 @@ function Ruleta() {
   const getBallEndRotation = (zeroEndRotation, currentNumber) => {
     return Math.abs(zeroEndRotation) + getRotationFromNumber(currentNumber);
   };
-
-
 
   const getBallNumberOfRotations = (minNumberOfSpins, maxNumberOfSpins) => {
     const numberOfSpins = anime.random(minNumberOfSpins, maxNumberOfSpins);
@@ -117,9 +114,7 @@ function Ruleta() {
         <img className="ruleta-contorno1" src={imagenContornoRuleta1} />
         <img className="ruleta-contorno2" src={imagenContornoRuleta2} />
         <img className="ruleta-contorno3" src={imagenContornoRuleta3} />
-        <div
-          className={"ball-container"}
-        >
+        <div className={"ball-container"}>
           <div
             className={"ball"}
             style={{ transform: "translate(-5px, -175px)" }} //posición inicial de la bola
