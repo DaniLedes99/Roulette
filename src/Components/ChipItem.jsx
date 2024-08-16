@@ -10,7 +10,7 @@ const ChipItem = ({
   isFollowing,
   previewImagePos,
   onClick,
-  value,
+  value, isSpinning
 }) => {
   return (
     <div className="ChipContainer">
@@ -18,7 +18,7 @@ const ChipItem = ({
         className="ChipImage"
         src={getChipImage(chipType)}
         alt=""
-        onClick={() => onClick(chipType,value)}
+        onClick={() => onClick(chipType,value,isSpinning)}
       />
       {activeChipLocal === chipType && isFollowing && (
         <img

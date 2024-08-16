@@ -11,10 +11,11 @@ const Buttons = ({
   modoBorrado,
   historialFichas,
   deshechas,
+  isSpinning
 }) => {
   return (
     <div className="buttons-container">
-      <div className="cross-container">
+      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
         <FontAwesomeIcon
           onClick={deshacer}
           disabled={historialFichas.length === 0}
@@ -24,7 +25,7 @@ const Buttons = ({
           color="red"
         />
       </div>
-      <div className="cross-container">
+      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
         <FontAwesomeIcon
           icon={faArrowRotateRight}
           onClick={rehacer}
@@ -34,7 +35,7 @@ const Buttons = ({
           color="red"
         />
       </div>
-      <div className="cross-container">
+      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
         <FontAwesomeIcon
           icon={faEraser}
           size="3x"
@@ -43,7 +44,7 @@ const Buttons = ({
           color={modoBorrado ? "gray" : "inherit"}
         />
       </div>
-      <div className="cross-container">
+      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
         <FontAwesomeIcon
           icon={faXmark}
           onClick={clearAllChips}

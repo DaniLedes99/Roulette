@@ -19,6 +19,7 @@ const Board = ({
   setModoBorrado,
   setActiveChip,
   setIsFollowing,
+  isSpinning,
 }) => {
   const [fichas, setFichas] = useState([]);
   const [historialFichas, setHistorialFichas] = useState([]);
@@ -80,8 +81,8 @@ const Board = ({
     }
   };
 
-  const handleCellClickDownUp = (j, i, chipValue, tableId) => {
-    if (activeChip != null) {
+  const handleCellClickDownUp = (j, i, chipValue, tableId, isSpinning) => {
+    if (activeChip != null && isSpinning===false) {
       if (tableId == "table0") {
         setAPUESTAS((prevAPUESTAS) => {
           const newAPUESTAS = { ...prevAPUESTAS };
@@ -178,7 +179,6 @@ const Board = ({
                 newAPUESTAS["2y3"] += chipValue;
                 console.log(chipValue);
                 console.log(newAPUESTAS["2y3"]);
-
                 break;
               case 1:
                 newAPUESTAS["2y3y5y6"] += chipValue;
@@ -658,12 +658,12 @@ const Board = ({
               padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
               position: "relative",
             }}
-            onClick={() => functionasociate(j, i, chipValue, tableId)}
+            onClick={() => functionasociate(j, i, chipValue, tableId, isSpinning)}
           >
             {imagenPos.x === j &&
               imagenPos.y === i &&
               imagenPos.tableId === tableId &&
-              activeChip && (
+              activeChip && isSpinning===false && (
                 <img
                   src={getChipImage(activeChip)}
                   alt="chip"
@@ -713,7 +713,9 @@ const Board = ({
           modoBorrado={modoBorrado}
           historialFichas={historialFichas}
           deshechas={deshechas}
+          isSpinning={isSpinning}
         />
+        
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">

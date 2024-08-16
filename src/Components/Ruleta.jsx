@@ -6,15 +6,23 @@ import imagenContornoRuleta1 from "../../img/roulette_3.png";
 import imagenContornoRuleta2 from "../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
+import GirarRuleta from "./GirarRuleta"
 
-function Ruleta() {
+function Ruleta({isSpinning,setIsSpinning}) {
   const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
 
   useEffect(() => {
     if (currentNumber !== null) {
       spinWheel(currentNumber);
+      setIsSpinning(true);
     }
   }, [currentNumber]);
+
+  const handleClick = () => {
+    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
+    const randomNumber = RouletteWheelNumbers[randomIndex];
+    setCurrentNumber(randomNumber);
+  };
 
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
@@ -80,6 +88,7 @@ function Ruleta() {
       easing: `cubicBezier(${bezier.join(",")})`,
       complete: () => {
         setCurrentNumber(number);
+        setIsSpinning(false)
       },
     });
 
@@ -121,7 +130,9 @@ function Ruleta() {
           ></div>
         </div>
       </div>
-
+       <button onClick={handleClick} disabled={isSpinning}>
+        {isSpinning ? 'Girando...' : 'Girar Ruleta'}
+      </button>
       <br />
     </>
   );
