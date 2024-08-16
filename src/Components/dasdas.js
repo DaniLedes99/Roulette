@@ -1,3 +1,13 @@
+
+const terminaronLasApuestas = (isSpinning)=>{
+  if (isSpinning===false){
+    clearAllChips()
+    setFichas([])
+  }
+}
+
+terminaronLasApuestas(isSpinning)
+
 // Función para actualizar las apuestas
 const actualizarApuesta = (newAPUESTAS, key, chipValue) => {
   newAPUESTAS[key] += chipValue;

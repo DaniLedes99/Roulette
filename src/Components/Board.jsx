@@ -20,12 +20,15 @@ const Board = ({
   setActiveChip,
   setIsFollowing,
   isSpinning,
+  APUESTAS,
+  setAPUESTAS,
+  rehacer,
+  deshacer,clearAllChips,borrarFicha, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas
 }) => {
-  const [fichas, setFichas] = useState([]);
-  const [historialFichas, setHistorialFichas] = useState([]);
-  const [deshechas, setDeshechas] = useState([]);
+
   const [nextId, setNextId] = useState(1);
-  const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
+
+
 
   const toggleModoBorrado = () => {
     setActiveChip(null);
@@ -50,36 +53,6 @@ const Board = ({
     }
   };
 
-  const clearAllChips = () => {
-    setFichas([]);
-    setAPUESTAS(INITIAL_VALUES_APUESTAS);
-  };
-
-  const borrarFicha = (id) => {
-    const fichaAEliminar = fichas.find((ficha) => ficha.id === id);
-
-    if (fichaAEliminar) {
-      setAPUESTAS((prevAPUESTAS) => {
-        const newAPUESTAS = { ...prevAPUESTAS };
-
-        switch (fichaAEliminar.x) {
-          case 0:
-            newAPUESTAS.menoresA12 -= fichaAEliminar.chipValue;
-            break;
-          case 1:
-            newAPUESTAS.entre12y24 -= fichaAEliminar.chipValue;
-            break;
-          case 2:
-            newAPUESTAS.entre24y36 -= fichaAEliminar.chipValue;
-            break;
-        }
-        return newAPUESTAS;
-      });
-
-      const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
-      setFichas(nuevasFichas);
-    }
-  };
 
   const handleCellClickDownUp = (j, i, chipValue, tableId, isSpinning) => {
     if (activeChip != null && isSpinning===false) {
@@ -608,31 +581,12 @@ const Board = ({
     }
   };
 
-  const deshacer = () => {
-    if (historialFichas.length > 0) {
-      const estadoAnterior = historialFichas.pop();
-      setDeshechas([...deshechas, { fichas: fichas, apuestas: APUESTAS }]);
-      setFichas(estadoAnterior.fichas);
-      setAPUESTAS(estadoAnterior.apuestas);
-      setHistorialFichas([...historialFichas]);
-    }
-  };
 
-  const rehacer = () => {
-    if (deshechas.length > 0) {
-      const estadoRehecho = deshechas.pop();
-      setHistorialFichas([
-        ...historialFichas,
-        { fichas: fichas, apuestas: APUESTAS },
-      ]);
-      setFichas(estadoRehecho.fichas);
-      setAPUESTAS(estadoRehecho.apuestas);
-      setDeshechas([...deshechas]);
-    }
-  };
 
   console.log(APUESTAS);
   //el apuestas en historial de fichas espera a q gregues una nueva ficha en un lugar distinto para actualizar su valor, no condiciona el funcionamiento de la ruleta pero ni idea por qué pasa
+  
+ 
 
   const renderTabla = (
     filas,

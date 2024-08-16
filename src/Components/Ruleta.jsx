@@ -8,13 +8,15 @@ import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
 import GirarRuleta from "./GirarRuleta"
 
-function Ruleta({isSpinning,setIsSpinning}) {
+function Ruleta({isSpinning,setIsSpinning, setFichas, clearAllChips}) {
   const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
+  const [showText, setShowText] = useState(false);
 
   useEffect(() => {
     if (currentNumber !== null) {
       spinWheel(currentNumber);
       setIsSpinning(true);
+      setShowText(false)
     }
   }, [currentNumber]);
 
@@ -28,6 +30,8 @@ function Ruleta({isSpinning,setIsSpinning}) {
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
   ];
+
+  const spinningDuration=5000
 
   const wheelMinNumberOfSpins = 2;
   const wheelMaxNumberOfSpins = 4;
@@ -64,7 +68,7 @@ function Ruleta({isSpinning,setIsSpinning}) {
 
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
-    const singleSpinDuration = 5000;
+    const singleSpinDuration = spinningDuration;
     const endRotation = -getRandomEndRotation(
       wheelMinNumberOfSpins,
       wheelMaxNumberOfSpins
@@ -89,6 +93,9 @@ function Ruleta({isSpinning,setIsSpinning}) {
       complete: () => {
         setCurrentNumber(number);
         setIsSpinning(false)
+        setShowText(true)
+        clearAllChips()
+        setFichas([])
       },
     });
 
@@ -108,6 +115,7 @@ function Ruleta({isSpinning,setIsSpinning}) {
 
   return (
     <>
+    {showText ? <p>{`Salió el número ${currentNumber}`}</p> : <p>Esperando...</p>}
       <div className="ruleta-container">
         <img
           style={{ transform: "rotate(0deg)" }}

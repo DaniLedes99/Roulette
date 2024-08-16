@@ -81,7 +81,7 @@ else{setIsFollowing(false)}}
         previewImagePos={previewImagePos}
         onClick={handleChipClick}
         value={1}
-    
+        isSpinning={isSpinning}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import "./App.css";
 import Ruleta from "./Components/Ruleta";
 import Board from "./Components/Board";
 import Chip from "./Components/Chip";
+import { INITIAL_VALUES_APUESTAS } from "./Components/BoardService";
 
 
 function App() {
@@ -11,6 +12,65 @@ function App() {
   const [modoBorrado, setModoBorrado] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isSpinning,setIsSpinning]= useState(false)
+  const [fichas, setFichas] = useState([]);
+  const [historialFichas, setHistorialFichas] = useState([]);
+  const [deshechas, setDeshechas] = useState([]);
+  const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
+
+  
+  const clearAllChips = () => {
+    setFichas([]);
+    setAPUESTAS(INITIAL_VALUES_APUESTAS);
+  };
+
+  const borrarFicha = (id) => {
+    const fichaAEliminar = fichas.find((ficha) => ficha.id === id);
+
+    if (fichaAEliminar) {
+      setAPUESTAS((prevAPUESTAS) => {
+        const newAPUESTAS = { ...prevAPUESTAS };
+
+        switch (fichaAEliminar.x) {
+          case 0:
+            newAPUESTAS.menoresA12 -= fichaAEliminar.chipValue;
+            break;
+          case 1:
+            newAPUESTAS.entre12y24 -= fichaAEliminar.chipValue;
+            break;
+          case 2:
+            newAPUESTAS.entre24y36 -= fichaAEliminar.chipValue;
+            break;
+        }
+        return newAPUESTAS;
+      });
+
+      const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+      setFichas(nuevasFichas);
+    }
+  };
+
+  const deshacer = () => {
+    if (historialFichas.length > 0) {
+      const estadoAnterior = historialFichas.pop();
+      setDeshechas([...deshechas, { fichas: fichas, apuestas: APUESTAS }]);
+      setFichas(estadoAnterior.fichas);
+      setAPUESTAS(estadoAnterior.apuestas);
+      setHistorialFichas([...historialFichas]);
+    }
+  };
+
+  const rehacer = () => {
+    if (deshechas.length > 0) {
+      const estadoRehecho = deshechas.pop();
+      setHistorialFichas([
+        ...historialFichas,
+        { fichas: fichas, apuestas: APUESTAS },
+      ]);
+      setFichas(estadoRehecho.fichas);
+      setAPUESTAS(estadoRehecho.apuestas);
+      setDeshechas([...deshechas]);
+    }
+  };
 
   const dontFollowmeImSpinning = (isSpinning,setIsFollowing)=>{
     if (isSpinning===true){
@@ -23,12 +83,13 @@ function App() {
   }, [isSpinning]);
  
 
+
   return (
     <>
       <div className="container">
-        <Ruleta isSpinning={isSpinning} setIsSpinning={setIsSpinning} />
+        <Ruleta isSpinning={isSpinning} setIsSpinning={setIsSpinning} clearAllChips={clearAllChips} setFichas={setFichas}/>
         <Board activeChip={activeChip} chipValue={chipValue}  modoBorrado={modoBorrado} 
-          setModoBorrado={setModoBorrado}  setActiveChip={setActiveChip} setIsFollowing={setIsFollowing} isSpinning={isSpinning}  />
+          setModoBorrado={setModoBorrado}  setActiveChip={setActiveChip} setIsFollowing={setIsFollowing} isSpinning={isSpinning} fichas={fichas} setFichas={setFichas} historialFichas={historialFichas} setHistorialFichas={setHistorialFichas} APUESTAS={APUESTAS} setAPUESTAS={setAPUESTAS} deshechas={deshechas} setDeshechas={setDeshechas} deshacer={deshacer} clearAllChips={clearAllChips} borrarFicha={borrarFicha} rehacer={rehacer}/>
         <Chip setActiveChip={setActiveChip} setChipValue={setChipValue}    modoBorrado={modoBorrado} 
           setModoBorrado={setModoBorrado} isFollowing={isFollowing} setIsFollowing={setIsFollowing} isSpinning={isSpinning}/>
       </div>
