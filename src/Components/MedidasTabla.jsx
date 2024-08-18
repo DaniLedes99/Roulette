@@ -65,7 +65,7 @@ export const renderTabla = ( fichas,
               padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
               position: "relative",
             }}
-            onClick={() => functionasociate(j, i, chipValue, tableId, isSpinning,modoBorrado)}
+            onClick={() => functionasociate({ columnas: j, filas: i, chipValue, tableId, isSpinning, modoBorrado })}
           >
             {imagenPos.x === j &&
               imagenPos.y === i &&
