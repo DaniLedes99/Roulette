@@ -1,17 +1,27 @@
 
-const terminaronLasApuestas = (isSpinning)=>{
-  if (isSpinning===false){
-    clearAllChips()
-    setFichas([])
-  }
-}
-
-terminaronLasApuestas(isSpinning)
 
 // Función para actualizar las apuestas
 const actualizarApuesta = (newAPUESTAS, key, chipValue) => {
   newAPUESTAS[key] += chipValue;
 };
+
+if (fichaAEliminar) {
+  setAPUESTAS((prevAPUESTAS) => {
+    const newAPUESTAS = { ...prevAPUESTAS };
+
+    switch (fichaAEliminar.x) {
+      case 0:
+        newAPUESTAS.menoresA12 -= fichaAEliminar.chipValue;
+        break;
+      case 1:
+        newAPUESTAS.entre12y24 -= fichaAEliminar.chipValue;
+        break;
+      case 2:
+        newAPUESTAS.entre24y36 -= fichaAEliminar.chipValue;
+        break;
+    }
+    return newAPUESTAS;
+  });}
 
 // Función para manejar la lógica de la tabla1
 const manejarTabla1 = (newAPUESTAS, i, j, chipValue) => {
@@ -244,3 +254,30 @@ const settearPosiciónFicha = (j, i, chipValue, tableId) => {
     setNextId(nextId + 1);
   }
 };
+const matriz = [
+  3,
+  [3, 6],
+  6,
+  [6, 9],
+  9,
+  [9, 12],
+  12,
+  [12, 15],
+  15,
+  [15, 18],
+  18,
+  [18, 21],
+  21,
+  [21, 24],
+  24,
+  [24, 27],
+  27,
+  [27, 30],
+  30,
+  [30, 33],
+  33,
+  [33, 36],
+  36
+];
+
+console.log(matriz[0])

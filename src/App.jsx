@@ -24,29 +24,9 @@ function App() {
   };
 
   const borrarFicha = (id) => {
-    const fichaAEliminar = fichas.find((ficha) => ficha.id === id);
-
-    if (fichaAEliminar) {
-      setAPUESTAS((prevAPUESTAS) => {
-        const newAPUESTAS = { ...prevAPUESTAS };
-
-        switch (fichaAEliminar.x) {
-          case 0:
-            newAPUESTAS.menoresA12 -= fichaAEliminar.chipValue;
-            break;
-          case 1:
-            newAPUESTAS.entre12y24 -= fichaAEliminar.chipValue;
-            break;
-          case 2:
-            newAPUESTAS.entre24y36 -= fichaAEliminar.chipValue;
-            break;
-        }
-        return newAPUESTAS;
-      });
-
-      const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
-      setFichas(nuevasFichas);
-    }
+    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+    setFichas(nuevasFichas);
+    
   };
 
   const deshacer = () => {
