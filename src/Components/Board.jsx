@@ -6,7 +6,7 @@ import "./Board.css";
 import React, { useState } from "react";
 import Buttons from "./Buttons";
 import { tableMeasures0, tableMeasures1, tableMeasures2, tableMeasures3, tableMeasures4, renderTabla } from "./MedidasTabla";
-import { tables } from "./ApuestasService";
+import { TABLES } from "./ApuestasService";
 
 const Board = ({
   activeChip,
@@ -32,54 +32,72 @@ const Board = ({
   };
 
 
-  const areYouGoingtoBetOrClear = ({columnas, filas, chipValue, tableId, isSpinning, modoBorrado}) => {
-    if ((activeChip || modoBorrado) && !isSpinning && tables[tableId]) {
-      setAPUESTAS((prevAPUESTAS) => {
-        const newAPUESTAS = { ...prevAPUESTAS };
-        newAPUESTAS[tables[tableId][filas][columnas]] = modoBorrado ? 0 : newAPUESTAS[tables[tableId][filas][columnas]] + chipValue;
-        return newAPUESTAS;
-      });
-      if (!modoBorrado) settearPosiciónFicha(columnas, filas, chipValue, tableId);
-    } else {
-      console.log("No se eligió ninguna chip o Table ID no encontrado");
+  const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
+    // 1. Safeguard clause
+   
+    if (!activeChip || !TABLES[tableId]) {
+        console.log("No se eligió ninguna chip o Table ID no encontrado");
     }
-  };
 
+    // 2. Guardar logica repetidas en variables
+    const bettedNumbers = TABLES[tableId][filas][columnas]; 
+
+    // 3. Quitar logica del setter
+    if (modoBorrado) {
+      setAPUESTAS((b) => {
+          const nuevoEstado = {
+              ...b,
+              [bettedNumbers]: 0
+          };
+          return nuevoEstado;
+      });
+      return;
+  }
+
+    setAPUESTAS((b) => ({
+        ...b,
+        [bettedNumbers]: b[bettedNumbers] + chipValue
+    }));
+   
+    settearPosiciónFicha(columnas, filas, chipValue, tableId);
+ 
+}
+
+  
+  const chipValueToColor=(nuevoValor) =>{
+      if (nuevoValor > 99) {
+       return "Black";
+      } else if (nuevoValor > 24) {
+        return "Blue";
+      } else if (nuevoValor > 9) {
+       return "Orange";
+      }
+  return "Purple"
+  }
+ 
   const settearPosiciónFicha = (j, i, chipValue, tableId) => {
-    let fichaExistente = fichas.find(
+    // 1. Usar const siempre que se pueda
+    const fichaExistente = fichas.find(
       (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
     );
+   
     if (fichaExistente) {
-      const nuevoValor = fichaExistente.chipValue + chipValue;
-
-      let nuevoChipType = "Purple";
-      if (nuevoValor > 99) {
-        nuevoChipType = "Black";
-      } else if (nuevoValor > 24) {
-        nuevoChipType = "Blue";
-      } else if (nuevoValor > 9) {
-        nuevoChipType = "Orange";
-      }
-
-      const nuevasFichas = fichas.map((ficha) =>
+        // 2. Logica repetida a variables
+  
+        const newChipValue = fichaExistente.chipValue + chipValue;
+        // 3. Logica a funciones
+        const chipColor = chipValueToColor(newChipValue);
+      
+        const nuevasFichas = fichas.map((ficha) =>
         ficha.id === fichaExistente.id
-          ? { ...ficha, chipValue: nuevoValor, chipType: nuevoChipType }
+          ? { ...ficha, chipValue: newChipValue, chipType: chipColor }
           : ficha
       );
       setFichas(nuevasFichas);
     } else {
-      let nuevoChipType = activeChip;
-      if (chipValue > 99) {
-        nuevoChipType = "Black";
-      } else if (chipValue > 24) {
-        nuevoChipType = "Blue";
-      } else if (chipValue > 9) {
-        nuevoChipType = "Orange";
-      }
 
       setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
       setDeshechas([]);
-
       setFichas([
         ...fichas,
         {
@@ -87,7 +105,7 @@ const Board = ({
           x: j,
           y: i,
           tableId: tableId,
-          chipType: nuevoChipType,
+          chipType: chipValueToColor(chipValue),
           chipValue: chipValue,
         },
       ]);
@@ -95,8 +113,6 @@ const Board = ({
     }
   };
 
-  //el apuestas en historial de fichas espera a q gregues una nueva ficha en un lugar distinto para actualizar su valor, no condiciona el funcionamiento de la ruleta pero ni idea por qué pasa
-  console.log(APUESTAS);
 
   return (
     <>

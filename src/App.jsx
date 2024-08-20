@@ -67,7 +67,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <Ruleta isSpinning={isSpinning} setIsSpinning={setIsSpinning} clearAllChips={clearAllChips} setFichas={setFichas}/>
+        <Ruleta isSpinning={isSpinning} setIsSpinning={setIsSpinning} clearAllChips={clearAllChips} setFichas={setFichas} APUESTAS={APUESTAS} />
         <Board activeChip={activeChip} chipValue={chipValue}  modoBorrado={modoBorrado} 
           setModoBorrado={setModoBorrado}  setActiveChip={setActiveChip} setIsFollowing={setIsFollowing} isSpinning={isSpinning} fichas={fichas} setFichas={setFichas} historialFichas={historialFichas} setHistorialFichas={setHistorialFichas} APUESTAS={APUESTAS} setAPUESTAS={setAPUESTAS} deshechas={deshechas} setDeshechas={setDeshechas} deshacer={deshacer} clearAllChips={clearAllChips} borrarFicha={borrarFicha} rehacer={rehacer}/>
         <Chip setActiveChip={setActiveChip} setChipValue={setChipValue}    modoBorrado={modoBorrado} 

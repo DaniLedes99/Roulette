@@ -1,4 +1,4 @@
-export const table0=[["cero"]]
+export const table0=[[0]]
 export const table1 = {
   0: [
     3,
@@ -90,6 +90,7 @@ export const table1 = {
     [16, 17, 19, 20],
     [19, 20],
     [19, 20, 22, 23],
+    [22, 23],
     [22, 23, 25, 26],
     [25, 26],
     [25, 26, 28, 29],
@@ -127,29 +128,27 @@ export const table1 = {
 };
 
 export const table2 = [
-  ["primeraFila", "segundaFila", "terceraFila"]
+  ["terceraFila"], ["segundaFila"], ["primeraFila"]
 ];
 
 export const table3 = [
-  ["menoresA12"], 
-  ["entre12y24"], 
-  ["entre24y36"]
+  ["menoresOigualA12", "entre13y24", "entre25y36"]
 ];
 
 export const table4 = [
-  ["igualOMenorA18"], 
-  ["par"],            
-  ["rojo"],          
-  ["negro"],          
-  ["impar"],          
-  ["igualOMayorA19"]  
+  ["igualOMenorA18", 
+  "par",            
+  "rojo",          
+  "negro",          
+  "impar",          
+  "igualOMayorA19"]  
 ];
 
-export const tables = {
+export const TABLES = {
   table0: table0,
   table1: table1,
   table2: table2,
   table3: table3,
   table4: table4,
 };
-
+// SI CAMBIO APUESTAS NO FUNCIONA NADA, Y SI LOS VINCULO???

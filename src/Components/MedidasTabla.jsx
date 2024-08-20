@@ -44,7 +44,7 @@ export const renderTabla = ( fichas,
     columnas,
     alturasFilas,
     anchoColumna,
-    functionasociate,
+    areYouGoingtoBetOrClear,
     activeChip,
     chipValue,
     tableId,
@@ -65,7 +65,7 @@ export const renderTabla = ( fichas,
               padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
               position: "relative",
             }}
-            onClick={() => functionasociate({ columnas: j, filas: i, chipValue, tableId, isSpinning, modoBorrado })}
+            onClick={() =>{if(!isSpinning){areYouGoingtoBetOrClear({ columnas: j, filas: i, chipValue, tableId, modoBorrado })}} }
           >
             {imagenPos.x === j &&
               imagenPos.y === i &&
@@ -91,9 +91,9 @@ export const renderTabla = ( fichas,
                     alt="chip"
                     className="image-default"
                     onClick={(e) => {
-                      if (modoBorrado) {
+                      if (modoBorrado && !isSpinning) {
                         borrarFicha(ficha.id);
-                        functionasociate(j, i, chipValue, tableId, isSpinning,modoBorrado)
+                        areYouGoingtoBetOrClear(j, i, chipValue, tableId, modoBorrado)
                       }
                     }}
                   />

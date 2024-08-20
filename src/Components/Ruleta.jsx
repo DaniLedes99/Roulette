@@ -6,10 +6,11 @@ import imagenContornoRuleta1 from "../../img/roulette_3.png";
 import imagenContornoRuleta2 from "../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
+import {ROULETTE_VALUE_TO_POSSIBLE_OUTCOME} from "./BoardService"
 import GirarRuleta from "./GirarRuleta"
 
-function Ruleta({isSpinning,setIsSpinning, setFichas, clearAllChips}) {
-  const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
+const Ruleta= ({isSpinning,setIsSpinning, setFichas, clearAllChips, APUESTAS}) => {
+  const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function Ruleta({isSpinning,setIsSpinning, setFichas, clearAllChips}) {
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
   ];
 
-  const spinningDuration=5000
+  const spinningDuration=3000
 
   const wheelMinNumberOfSpins = 2;
   const wheelMaxNumberOfSpins = 4;
@@ -66,6 +67,27 @@ function Ruleta({isSpinning,setIsSpinning, setFichas, clearAllChips}) {
     return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
 
+  const [nonZeroBets, setNonZeroBets] = useState({});
+
+  const getNonZeroBets = (apuestas) => {
+    // Verificar que apuestas no sea undefined o null
+    if (!apuestas || typeof apuestas !== 'object') {
+      console.error("El objeto de apuestas no es válido.");
+      return {};
+    }
+  
+    let nonZeroBets = {};
+  
+    for (const [betType, amount] of Object.entries(apuestas)) {
+      if (amount !== 0) {
+        nonZeroBets[betType] = amount;
+      }
+    }
+  
+    return nonZeroBets;
+  };
+
+
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
     const singleSpinDuration = spinningDuration;
@@ -92,6 +114,18 @@ function Ruleta({isSpinning,setIsSpinning, setFichas, clearAllChips}) {
       easing: `cubicBezier(${bezier.join(",")})`,
       complete: () => {
         setCurrentNumber(number);
+        const bets = getNonZeroBets(APUESTAS);
+        setNonZeroBets(bets);
+        console.log('Apuestas distintas de 0:', bets);  
+        console.log(ROULETTE_VALUE_TO_POSSIBLE_OUTCOME[currentNumber])
+        const betKeys = Object.keys(bets); 
+        betKeys.forEach(key => {
+            if (ROULETTE_VALUE_TO_POSSIBLE_OUTCOME[currentNumber].includes(key)) {
+              console.log("GANASTE TIGRE");
+                } else {
+              console.log("PERDISTE :(");
+                  }
+                    });
         setIsSpinning(false)
         setShowText(true)
         clearAllChips()
