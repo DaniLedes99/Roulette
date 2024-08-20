@@ -67,26 +67,58 @@ const Ruleta= ({isSpinning,setIsSpinning, setFichas, clearAllChips, APUESTAS}) =
     return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
 
-  const [nonZeroBets, setNonZeroBets] = useState({});
+const [nonZeroBets, setNonZeroBets] = useState({});
 
-  const getNonZeroBets = (apuestas) => {
-    // Verificar que apuestas no sea undefined o null
-    if (!apuestas || typeof apuestas !== 'object') {
-      console.error("El objeto de apuestas no es válido.");
-      return {};
-    }
-  
-    let nonZeroBets = {};
-  
-    for (const [betType, amount] of Object.entries(apuestas)) {
-      if (amount !== 0) {
-        nonZeroBets[betType] = amount;
-      }
-    }
-  
-    return nonZeroBets;
-  };
+const getNonZeroBets = (apuestas) => {
+  if (!apuestas || typeof apuestas !== 'object') {
+    console.error("El objeto de apuestas no es válido.");
+    return {};
+  }
 
+  let nonZeroBets = {};
+
+  for (const [betNumber, betAmountAndMultiplier] of Object.entries(apuestas)) {
+    if (betAmountAndMultiplier.valor !== 0) {
+      nonZeroBets[betNumber] = betAmountAndMultiplier;
+    }
+  }
+
+  return nonZeroBets;
+};
+
+const processBets = (APUESTAS, currentNumber) => {
+  const bets = getNonZeroBets(APUESTAS);
+  setNonZeroBets(bets);
+  console.log('Apuestas distintas de 0:', bets);  
+
+  const betKeys = Object.keys(bets);
+  const matchingBets = [];
+  const nonMatchingBets = [];
+  let totalMatchingValue = 0;
+  let totalNonMatchingValue = 0;
+
+  betKeys.forEach(key => {
+    const { valor, multiplicador } = bets[key];
+    const result = valor * multiplicador;
+    if (ROULETTE_VALUE_TO_POSSIBLE_OUTCOME[currentNumber].includes(key)) {
+      matchingBets.push({ key, valorMultiplicado: result });  
+      totalMatchingValue += result; 
+      console.log(`GANASTE $${result}`);
+    } else {
+      nonMatchingBets.push({ key, valor });  
+      totalNonMatchingValue += valor;  
+      console.log(`PERDISTE $${valor}`);
+    }
+  });
+
+  matchingBets.push({ valortotal: totalMatchingValue });
+  nonMatchingBets.push({ valortotal: totalNonMatchingValue });
+
+  console.log('Apuestas ganadoras:', matchingBets);
+  console.log('Apuestas perdedoras:', nonMatchingBets);
+
+  return { matchingBets, nonMatchingBets };
+};
 
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
@@ -114,18 +146,9 @@ const Ruleta= ({isSpinning,setIsSpinning, setFichas, clearAllChips, APUESTAS}) =
       easing: `cubicBezier(${bezier.join(",")})`,
       complete: () => {
         setCurrentNumber(number);
-        const bets = getNonZeroBets(APUESTAS);
-        setNonZeroBets(bets);
-        console.log('Apuestas distintas de 0:', bets);  
-        console.log(ROULETTE_VALUE_TO_POSSIBLE_OUTCOME[currentNumber])
-        const betKeys = Object.keys(bets); 
-        betKeys.forEach(key => {
-            if (ROULETTE_VALUE_TO_POSSIBLE_OUTCOME[currentNumber].includes(key)) {
-              console.log("GANASTE TIGRE");
-                } else {
-              console.log("PERDISTE :(");
-                  }
-                    });
+        const { matchingBets, nonMatchingBets } = processBets(APUESTAS, currentNumber);
+        console.log(matchingBets)
+        console.log(nonMatchingBets)
         setIsSpinning(false)
         setShowText(true)
         clearAllChips()

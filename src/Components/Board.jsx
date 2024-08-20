@@ -32,36 +32,41 @@ const Board = ({
   };
 
 
-  const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
-    // 1. Safeguard clause
-   
-    if (!activeChip || !TABLES[tableId]) {
-        console.log("No se eligió ninguna chip o Table ID no encontrado");
-    }
-
-    // 2. Guardar logica repetidas en variables
-    const bettedNumbers = TABLES[tableId][filas][columnas]; 
-
-    // 3. Quitar logica del setter
-    if (modoBorrado) {
-      setAPUESTAS((b) => {
-          const nuevoEstado = {
-              ...b,
-              [bettedNumbers]: 0
-          };
-          return nuevoEstado;
-      });
-      return;
+const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
+   // 1. Safeguard clause
+  if (!activeChip || !TABLES[tableId]) {
+    console.log("No se eligió ninguna chip o Table ID no encontrado");
+    return;
   }
 
-    setAPUESTAS((b) => ({
+  const bettedNumbers = TABLES[tableId][filas][columnas]; 
+
+    // 3. Quitar logica del setter
+  if (modoBorrado) {
+    setAPUESTAS((b) => {
+      const nuevoEstado = {
         ...b,
-        [bettedNumbers]: b[bettedNumbers] + chipValue
-    }));
-   
-    settearPosiciónFicha(columnas, filas, chipValue, tableId);
- 
-}
+        [bettedNumbers]: {
+          ...b[bettedNumbers],
+          valor: 0,
+        },
+      };
+      return nuevoEstado;
+    });
+    return;
+  }
+
+  setAPUESTAS((b) => ({
+    ...b,
+    [bettedNumbers]: {
+      ...b[bettedNumbers],
+      valor: b[bettedNumbers].valor + chipValue,
+    },
+  }));
+
+  settearPosiciónFicha(columnas, filas, chipValue, tableId);
+};
+
 
   
   const chipValueToColor=(nuevoValor) =>{
