@@ -4,7 +4,6 @@ import Ruleta from "./Components/Ruleta";
 import Board from "./Components/Board";
 import Chip from "./Components/Chip";
 import { INITIAL_VALUES_APUESTAS } from "./Components/BoardService";
-import WhatsAppButton from "./Components/Wpp";
 
 function App() {
   const [activeChip, setActiveChip] = useState(null);
