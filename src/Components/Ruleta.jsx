@@ -70,13 +70,9 @@ const Ruleta = ({
       minNumberOfSpins * RouletteWheelNumbers.length,
       maxNumberOfSpins * RouletteWheelNumbers.length
     );
-    console.log(rotateTo)
-    console.log(minNumberOfSpins * RouletteWheelNumbers.length)
-    console.log(maxNumberOfSpins * RouletteWheelNumbers.length);
-    
+
     return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
-
 
   const getBets = (apuestas) => {
     if (!apuestas || typeof apuestas !== "object") {
@@ -118,7 +114,10 @@ const Ruleta = ({
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
     const singleSpinDuration = spinningDuration;
-    const endRotation = -getRandomEndRotation(wheelMinNumberOfSpins,wheelMaxNumberOfSpins);
+    const endRotation = -getRandomEndRotation(
+      wheelMinNumberOfSpins,
+      wheelMaxNumberOfSpins
+    );
     const zeroFromEndRotation = getZeroEndRotation(endRotation);
     const ballEndRotation =
       getBallNumberOfRotations(wheelMinNumberOfSpins, wheelMaxNumberOfSpins) +
