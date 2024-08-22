@@ -15,6 +15,7 @@
   left: 0;
   width: 100%;
   height: auto;
+  pointer-events: none; /* no tocar esto porque sino se superpone con algunos componentes de la página */
 }
 
 .ball-container {
@@ -24,6 +25,7 @@
   width: 400px;
   height: 400px;
   z-index: 6;
+
 }
 
 .ball {
