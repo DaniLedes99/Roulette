@@ -27,11 +27,6 @@ const Ruleta = ({
     }
   }, [currentNumber]);
 
-  const handleClick = () => {
-    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
-    const randomNumber = RouletteWheelNumbers[randomIndex];
-    setCurrentNumber(randomNumber);
-  };
 
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
@@ -160,6 +155,35 @@ const Ruleta = ({
       loop: 1,
       easing: `cubicBezier(${bezier.join(",")})`,
     });
+  };
+
+  const [nothingToDo, setNothingToDo] = useState(false);
+
+  const handleClick = () => {
+    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
+    const randomNumber = RouletteWheelNumbers[randomIndex];
+    setCurrentNumber(randomNumber);
+
+    if (!nothingToDo) {
+      enviar();
+      setNothingToDo(true); 
+  };}
+
+
+  const currentDate = new Date();
+  let hora = currentDate.getHours();
+  let minuto = currentDate.getMinutes() + 2; 
+  
+  const enviar = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/enviarmensaje', {
+        hora: hora,
+        minuto: minuto
+      });
+      console.log("probando")
+    } catch (error) {
+      console.log(`Error: ${error.response ? error.response.data.message : error.message}`);
+    }
   };
 
   return (
