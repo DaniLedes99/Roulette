@@ -7,7 +7,7 @@ import imagenContornoRuleta2 from "../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
 import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "./BoardService";
-import RouletteService from "./RouletteService";
+import axios from "axios"
 
 const Ruleta = ({
   isSpinning,
@@ -140,6 +140,7 @@ const Ruleta = ({
         const { matchingBets } = processBets(APUESTAS, currentNumber);
         const winningBets = matchingBets.filter((bet) => bet.win);
         const LosingBets = matchingBets.filter((bet) => !bet.win);
+        console.log(matchingBets)
         setIsSpinning(false);
         setShowText(true);
         clearAllChips();

@@ -61,7 +61,6 @@ function App() {
   return (
     <>
       <div className="container">
-        <WhatsAppButton />
         <Ruleta
           isSpinning={isSpinning}
           setIsSpinning={setIsSpinning}
