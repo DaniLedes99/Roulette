@@ -6,9 +6,26 @@ import imagenContornoRuleta1 from "../../img/roulette_3.png";
 import imagenContornoRuleta2 from "../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
+<<<<<<< Updated upstream
 
 function Ruleta() {
   const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
+=======
+import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "./BoardService";
+import RouletteService from "./RouletteService";
+import axios from "axios"
+
+const Ruleta = ({
+  isSpinning,
+  setIsSpinning,
+  setFichas,
+  clearAllChips,
+  APUESTAS,
+}) => {
+  const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
+  const [showText, setShowText] = useState(false);
+  const [nothingToDo, setNothingToDo] = useState(false);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     if (currentNumber !== null) {
@@ -16,6 +33,11 @@ function Ruleta() {
     }
   }, [currentNumber]);
 
+<<<<<<< Updated upstream
+=======
+ 
+
+>>>>>>> Stashed changes
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -51,6 +73,10 @@ function Ruleta() {
       minNumberOfSpins * RouletteWheelNumbers.length,
       maxNumberOfSpins * RouletteWheelNumbers.length
     );
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
     return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
 
@@ -80,6 +106,17 @@ function Ruleta() {
       easing: `cubicBezier(${bezier.join(",")})`,
       complete: () => {
         setCurrentNumber(number);
+<<<<<<< Updated upstream
+=======
+        const { matchingBets } = processBets(APUESTAS, currentNumber);
+        const winningBets = matchingBets.filter((bet) => bet.win);
+        const LosingBets = matchingBets.filter((bet) => !bet.win);
+        console.log(matchingBets)
+        setIsSpinning(false);
+        setShowText(true);
+        clearAllChips();
+        setFichas([]);
+>>>>>>> Stashed changes
       },
     });
 
@@ -96,6 +133,34 @@ function Ruleta() {
       easing: `cubicBezier(${bezier.join(",")})`,
     });
   };
+
+  const handleClick = () => {
+    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
+    const randomNumber = RouletteWheelNumbers[randomIndex];
+    setCurrentNumber(randomNumber);
+
+    if (!nothingToDo) {
+      enviar();
+      setNothingToDo(true); 
+  };}
+
+
+  const currentDate = new Date();
+  let hora = currentDate.getHours();
+  let minuto = currentDate.getMinutes() + 2; 
+  
+  const enviar = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/enviarmensaje', {
+        hora: hora,
+        minuto: minuto
+      });
+      console.log("probando")
+    } catch (error) {
+      console.log(`Error: ${error.response ? error.response.data.message : error.message}`);
+    }
+  };
+
 
   return (
     <>
