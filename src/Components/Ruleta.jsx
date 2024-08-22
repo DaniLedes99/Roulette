@@ -6,11 +6,6 @@ import imagenContornoRuleta1 from "../../img/roulette_3.png";
 import imagenContornoRuleta2 from "../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../img/roulette_5.png";
 import "./Ruleta.css";
-<<<<<<< Updated upstream
-
-function Ruleta() {
-  const [currentNumber, setCurrentNumber] = useState(0); // el número que viene del servidor
-=======
 import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "./BoardService";
 import RouletteService from "./RouletteService";
 import axios from "axios"
@@ -25,7 +20,6 @@ const Ruleta = ({
   const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
   const [nothingToDo, setNothingToDo] = useState(false);
->>>>>>> Stashed changes
 
   useEffect(() => {
     if (currentNumber !== null) {
@@ -33,11 +27,8 @@ const Ruleta = ({
     }
   }, [currentNumber]);
 
-<<<<<<< Updated upstream
-=======
  
 
->>>>>>> Stashed changes
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
     24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26,
@@ -73,10 +64,7 @@ const Ruleta = ({
       minNumberOfSpins * RouletteWheelNumbers.length,
       maxNumberOfSpins * RouletteWheelNumbers.length
     );
-<<<<<<< Updated upstream
-=======
     
->>>>>>> Stashed changes
     return (360 / RouletteWheelNumbers.length) * rotateTo;
   };
 
@@ -106,8 +94,6 @@ const Ruleta = ({
       easing: `cubicBezier(${bezier.join(",")})`,
       complete: () => {
         setCurrentNumber(number);
-<<<<<<< Updated upstream
-=======
         const { matchingBets } = processBets(APUESTAS, currentNumber);
         const winningBets = matchingBets.filter((bet) => bet.win);
         const LosingBets = matchingBets.filter((bet) => !bet.win);
@@ -116,7 +102,6 @@ const Ruleta = ({
         setShowText(true);
         clearAllChips();
         setFichas([]);
->>>>>>> Stashed changes
       },
     });
 
