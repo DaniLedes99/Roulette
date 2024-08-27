@@ -17,12 +17,16 @@ function App() {
   const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
   const [lastPlay, setLastPlay]=useState([])
 
-
   const clearAllChips = () => {
     setFichas([]);
-    setAPUESTAS(INITIAL_VALUES_APUESTAS);
+    setAPUESTAS((prevApuestas) => {
+      const newApuestas = {};
+      for (let key in prevApuestas) {
+        newApuestas[key] = { ...prevApuestas[key], valor: 0 };
+      }
+      return newApuestas;
+    });
   };
-
 
 
   const deshacer = () => {
