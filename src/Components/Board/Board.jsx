@@ -1,12 +1,13 @@
-import ZeroImage from "../../img/0.png";
-import BoardImage from "../../img/BoardMin.png";
-import Right from "../../img/right.png";
-import boardImageDown from "../../img/boarddown.png";
+import ZeroImage from "../../../img/0.png";
+import BoardImage from "../../../img/BoardMin.png";
+import Right from "../../../img/right.png";
+import boardImageDown from "../../../img/boarddown.png";
 import "./Board.css";
 import React, { useState } from "react";
-import Buttons from "./Buttons";
-import { tableMeasures0, tableMeasures1, tableMeasures2, tableMeasures3, tableMeasures4, renderTabla } from "./MedidasTabla";
-import { TABLES } from "./ApuestasService";
+import Buttons from "../Buttons/Buttons";
+import { tableMeasures0, tableMeasures1, tableMeasures2, tableMeasures3, tableMeasures4, renderTabla } from "../Board/MedidasTabla";
+import { TABLES } from "../ApuestasService";
+
 
 const Board = ({
   activeChip,
@@ -19,55 +20,59 @@ const Board = ({
   APUESTAS,
   setAPUESTAS,
   rehacer,
-  deshacer,clearAllChips,borrarFicha, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas
+  deshacer,clearAllChips, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas, lastPlay
 }) => {
 
   const [nextId, setNextId] = useState(1);
 
-
-  const toggleModoBorrado = () => {
+    const toggleModoBorrado = () => {
     setActiveChip(null);
     setIsFollowing(false);
     setModoBorrado((prevState) => !prevState);
   };
-
-
-const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
-   // 1. Safeguard clause
-  if (!activeChip || !TABLES[tableId]) {
-    console.log("No se eligió ninguna chip o Table ID no encontrado");
-    return;
-  }
-
-  const bettedNumbers = TABLES[tableId][filas][columnas]; 
-
-    // 3. Quitar logica del setter
-  if (modoBorrado) {
-    setAPUESTAS((b) => {
-      const nuevoEstado = {
-        ...b,
-        [bettedNumbers]: {
-          ...b[bettedNumbers],
-          valor: 0,
-        },
-      };
-      return nuevoEstado;
-    });
-    return;
-  }
-
-  setAPUESTAS((b) => ({
-    ...b,
-    [bettedNumbers]: {
-      ...b[bettedNumbers],
-      valor: b[bettedNumbers].valor + chipValue,
-    },
-  }));
-
-  settearPosiciónFicha(columnas, filas, chipValue, tableId);
+  
+  const borrarFicha = (id) => {
+     const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+    setFichas(nuevasFichas);
+}
+ 
+  const repeatBet = () => {
+    setFichas(lastPlay);
 };
 
 
+const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
+
+  if (!activeChip || !TABLES[tableId]) {
+    console.log("No se eligió ninguna chip o Table ID no encontrado");
+  }
+
+  const bettedNumbers = TABLES[tableId][filas][columnas];
+  console.log(`bettedNumbers: ${bettedNumbers}`);
+
+  setAPUESTAS((prevApuestas) => {
+    const nuevoEstado = { ...prevApuestas };
+
+    if (modoBorrado) {
+      console.log("Modo borrado está activo");
+      if (nuevoEstado[bettedNumbers]) {
+        nuevoEstado[bettedNumbers].valor = 0;
+      }
+    } else {
+      if (nuevoEstado[bettedNumbers]) {
+        nuevoEstado[bettedNumbers].valor += chipValue;
+      }
+    }
+
+    return nuevoEstado;
+  });
+
+  if (!modoBorrado) {
+    settearPosiciónFicha(columnas, filas, chipValue, tableId);
+  }
+};
+
+console.log(APUESTAS)
   
   const chipValueToColor=(nuevoValor) =>{
       if (nuevoValor > 99) {
@@ -81,16 +86,15 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
   }
  
   const settearPosiciónFicha = (j, i, chipValue, tableId) => {
-    // 1. Usar const siempre que se pueda
+  
+  
     const fichaExistente = fichas.find(
       (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
     );
    
     if (fichaExistente) {
-        // 2. Logica repetida a variables
   
         const newChipValue = fichaExistente.chipValue + chipValue;
-        // 3. Logica a funciones
         const chipColor = chipValueToColor(newChipValue);
       
         const nuevasFichas = fichas.map((ficha) =>
@@ -131,6 +135,7 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
           historialFichas={historialFichas}
           deshechas={deshechas}
           isSpinning={isSpinning}
+          repeatBet={repeatBet}
         />
         
         <div className="Board-container-up">

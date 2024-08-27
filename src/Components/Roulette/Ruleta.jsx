@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import anime from "animejs/lib/anime.es.js";
-import imagenRuleta from "../../img/roulette_2.png";
-import imagenContornoRuleta from "../../img/roulette_1.png";
-import imagenContornoRuleta1 from "../../img/roulette_3.png";
-import imagenContornoRuleta2 from "../../img/roulette_4.png";
-import imagenContornoRuleta3 from "../../img/roulette_5.png";
+import imagenRuleta from "../../../img/roulette_2.png";
+import imagenContornoRuleta from "../../../img/roulette_1.png";
+import imagenContornoRuleta1 from "../../../img/roulette_3.png";
+import imagenContornoRuleta2 from "../../../img/roulette_4.png";
+import imagenContornoRuleta3 from "../../../img/roulette_5.png";
 import "./Ruleta.css";
-import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "./BoardService";
+import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "../Board/BoardService";
 import axios from "axios"
 
 const Ruleta = ({
@@ -14,10 +14,12 @@ const Ruleta = ({
   setIsSpinning,
   setFichas,
   clearAllChips,
-  APUESTAS,
+  APUESTAS,fichas, setLastPlay
 }) => {
   const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
+  const [nothingToDo, setNothingToDo] = useState(false);
+
 
   useEffect(() => {
     if (currentNumber !== null) {
@@ -88,6 +90,8 @@ const Ruleta = ({
     return nonZeroBets;
   };
 
+
+
   const processBets = (APUESTAS, currentNumber) => {
     const bets = getBets(APUESTAS);
     const matchingBets = Object.entries(bets).map(([key, e]) => {
@@ -105,6 +109,10 @@ const Ruleta = ({
 
     return { matchingBets };
   };
+
+  const guardarHistorial=(fichas)=>{
+    setLastPlay(fichas)
+}
 
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
@@ -139,9 +147,14 @@ const Ruleta = ({
         setIsSpinning(false);
         setShowText(true);
         clearAllChips();
+        guardarHistorial(fichas, APUESTAS)
         setFichas([]);
+ 
+
       },
     });
+
+ 
 
     anime({
       targets: ".ball-container",
@@ -157,8 +170,7 @@ const Ruleta = ({
     });
   };
 
-  const [nothingToDo, setNothingToDo] = useState(false);
-
+ 
   const handleClick = () => {
     const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
     const randomNumber = RouletteWheelNumbers[randomIndex];

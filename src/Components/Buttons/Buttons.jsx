@@ -11,7 +11,7 @@ const Buttons = ({
   modoBorrado,
   historialFichas,
   deshechas,
-  isSpinning
+  isSpinning, repeatBet
 }) => {
   return (
     <div className="buttons-container">
@@ -52,6 +52,9 @@ const Buttons = ({
           color="red"
           size="3x"
         ></FontAwesomeIcon>
+      </div>
+      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+        <button onClick={repeatBet}>Repetir la Apuesta</button>
       </div>
     </div>
   );

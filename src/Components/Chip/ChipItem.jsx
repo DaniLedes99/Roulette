@@ -1,8 +1,8 @@
 import React from "react";
-import Black from "../../img/chip_black.png";
-import Blue from "../../img/chip_blue.png";
-import Orange from "../../img/chip_orange.png";
-import Purple from "../../img/chip_purple.png";
+import Black from "../../../img/chip_black.png";
+import Blue from "../../../img/chip_blue.png";
+import Orange from "../../../img/chip_orange.png";
+import Purple from "../../../img/chip_purple.png";
 
 const ChipItem = ({
   chipType,

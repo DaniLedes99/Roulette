@@ -1,7 +1,7 @@
-import Black from "../../img/chip_black.png";
-import Blue from "../../img/chip_blue.png";
-import Orange from "../../img/chip_orange.png";
-import Purple from "../../img/chip_purple.png";
+import Black from "../../../img/chip_black.png";
+import Blue from "../../../img/chip_blue.png";
+import Orange from "../../../img/chip_orange.png";
+import Purple from "../../../img/chip_purple.png";
 
 const createColumnWidths = () => {
     const newArray = [];
@@ -65,7 +65,7 @@ export const renderTabla = ( fichas,
               padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
               position: "relative",
             }}
-            onClick={() =>{if(!isSpinning){areYouGoingtoBetOrClear({ columnas: j, filas: i, chipValue, tableId, modoBorrado })}} }
+            onClick={() =>{if(!isSpinning && activeChip ){areYouGoingtoBetOrClear({ columnas: j, filas: i, chipValue, tableId, modoBorrado })}} }
           >
             {imagenPos.x === j &&
               imagenPos.y === i &&
@@ -91,9 +91,9 @@ export const renderTabla = ( fichas,
                     alt="chip"
                     className="image-default"
                     onClick={(e) => {
-                      if (modoBorrado && !isSpinning) {
+                      if (!isSpinning) {
+                        areYouGoingtoBetOrClear({ columnas: j, filas: i, chipValue, tableId, modoBorrado }) 
                         borrarFicha(ficha.id);
-                        areYouGoingtoBetOrClear(j, i, chipValue, tableId, modoBorrado)
                       }
                     }}
                   />

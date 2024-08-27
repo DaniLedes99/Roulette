@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import Ruleta from "./Components/Ruleta";
-import Board from "./Components/Board";
-import Chip from "./Components/Chip";
-import { INITIAL_VALUES_APUESTAS } from "./Components/BoardService";
+import Ruleta from "./Components/Roulette/Ruleta";
+import Board from "./Components/Board/Board";
+import Chip from "./Components/Chip/Chip";
+import { INITIAL_VALUES_APUESTAS } from "./Components/Board/BoardService";
 
 function App() {
   const [activeChip, setActiveChip] = useState(null);
@@ -15,16 +15,15 @@ function App() {
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
+  const [lastPlay, setLastPlay]=useState([])
+
 
   const clearAllChips = () => {
     setFichas([]);
     setAPUESTAS(INITIAL_VALUES_APUESTAS);
   };
 
-  const borrarFicha = (id) => {
-    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
-    setFichas(nuevasFichas);
-  };
+
 
   const deshacer = () => {
     if (historialFichas.length > 0) {
@@ -66,7 +65,10 @@ function App() {
           setIsSpinning={setIsSpinning}
           clearAllChips={clearAllChips}
           setFichas={setFichas}
+          fichas={fichas}
           APUESTAS={APUESTAS}
+          lastplay={lastPlay}
+          setLastPlay={setLastPlay}
         />
         <Board
           activeChip={activeChip}
@@ -86,8 +88,9 @@ function App() {
           setDeshechas={setDeshechas}
           deshacer={deshacer}
           clearAllChips={clearAllChips}
-          borrarFicha={borrarFicha}
           rehacer={rehacer}
+          lastPlay={lastPlay}
+          setLastPlay={setLastPlay}
         />
         <Chip
           setActiveChip={setActiveChip}
