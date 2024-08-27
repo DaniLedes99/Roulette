@@ -20,7 +20,7 @@ const Board = ({
   APUESTAS,
   setAPUESTAS,
   rehacer,
-  deshacer,clearAllChips, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas, lastPlay
+  deshacer,clearAllChips, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas, lastPlay, lastBet
 }) => {
 
   const [nextId, setNextId] = useState(1);
@@ -38,6 +38,7 @@ const Board = ({
  
   const repeatBet = () => {
     setFichas(lastPlay);
+    setAPUESTAS(lastBet)
 };
 
 

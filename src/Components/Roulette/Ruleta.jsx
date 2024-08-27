@@ -14,7 +14,7 @@ const Ruleta = ({
   setIsSpinning,
   setFichas,
   clearAllChips,
-  APUESTAS,fichas, setLastPlay
+  APUESTAS,fichas, setLastPlay, setLastBet, lastBet
 }) => {
   const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
@@ -112,6 +112,7 @@ const Ruleta = ({
 
   const guardarHistorial=(fichas)=>{
     setLastPlay(fichas)
+    setLastBet(APUESTAS)
 }
 
   const spinWheel = (number) => {

@@ -16,6 +16,7 @@ function App() {
   const [deshechas, setDeshechas] = useState([]);
   const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
   const [lastPlay, setLastPlay]=useState([])
+  const [lastBet, setLastBet]=useState([])
 
   const clearAllChips = () => {
     setFichas([]);
@@ -73,6 +74,7 @@ function App() {
           APUESTAS={APUESTAS}
           lastplay={lastPlay}
           setLastPlay={setLastPlay}
+          setLastBet={setLastBet}
         />
         <Board
           activeChip={activeChip}
@@ -95,6 +97,7 @@ function App() {
           rehacer={rehacer}
           lastPlay={lastPlay}
           setLastPlay={setLastPlay}
+          lastBet={lastBet}
         />
         <Chip
           setActiveChip={setActiveChip}
