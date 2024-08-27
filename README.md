@@ -1,4 +1,8 @@
-# React + Vite 
+# React + Vite  
+
+Este es un ejemplo de mi proyecto.
+
+![Captura de pantalla de la página](/image.png)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
