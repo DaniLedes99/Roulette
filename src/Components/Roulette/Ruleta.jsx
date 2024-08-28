@@ -14,11 +14,11 @@ const Ruleta = ({
   setIsSpinning,
   setFichas,
   clearAllChips,
-  APUESTAS,fichas, setLastPlay, setLastBet, lastBet
+  APUESTAS,fichas, setLastPlay, setLastBet,
 }) => {
   const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
-  const [nothingToDo, setNothingToDo] = useState(false);
+
 
 
   useEffect(() => {
@@ -28,6 +28,21 @@ const Ruleta = ({
       setShowText(false);
     }
   }, [currentNumber]);
+
+  const fetchRandomNumber = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/sendrandomnumber");
+      const { number } = response.data;
+      setCurrentNumber(number);
+    } catch (error) {
+      console.error("Error al obtener el número aleatorio:", error);
+    }
+  };
+
+
+  const handleClick = () => {
+    fetchRandomNumber();
+  };
 
 
   const RouletteWheelNumbers = [
@@ -150,8 +165,6 @@ const Ruleta = ({
         clearAllChips();
         guardarHistorial(fichas, APUESTAS)
         setFichas([]);
- 
-
       },
     });
 
@@ -172,32 +185,6 @@ const Ruleta = ({
   };
 
  
-  const handleClick = () => {
-    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
-    const randomNumber = RouletteWheelNumbers[randomIndex];
-    setCurrentNumber(randomNumber);
-
-    if (!nothingToDo) {
-      enviar();
-      setNothingToDo(true); 
-  };}
-
-
-  const currentDate = new Date();
-  let hora = currentDate.getHours();
-  let minuto = currentDate.getMinutes() + 2; 
-  
-  const enviar = async () => {
-    try {
-      const response = await axios.post('http://127.0.0.1:5000/enviarmensaje', {
-        hora: hora,
-        minuto: minuto
-      });
-      console.log("probando")
-    } catch (error) {
-      console.log(`Error: ${error.response ? error.response.data.message : error.message}`);
-    }
-  };
 
   return (
     <>

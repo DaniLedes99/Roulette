@@ -55,7 +55,6 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
     const nuevoEstado = { ...prevApuestas };
 
     if (modoBorrado) {
-      console.log("Modo borrado está activo");
       if (nuevoEstado[bettedNumbers]) {
         nuevoEstado[bettedNumbers].valor = 0;
       }
@@ -73,7 +72,6 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
   }
 };
 
-console.log(APUESTAS)
   
   const chipValueToColor=(nuevoValor) =>{
       if (nuevoValor > 99) {
