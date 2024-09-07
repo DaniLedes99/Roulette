@@ -1,6 +1,6 @@
 # React + Vite  
 
-Este es un ejemplo de mi proyecto.
+
 
 ![Captura de pantalla de la página](/image.png)
 
