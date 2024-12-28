@@ -66,7 +66,7 @@ export const renderTabla = (
             padding: `${alturasFilas[i]}px ${anchoColumna[j]}px`,
             position: "relative",
           }}
-          onClick={() => {
+          onClick={(e) => {
             if (!isSpinning && activeChip) {
               areYouGoingtoBetOrClear({
                 columnas: j,
@@ -74,6 +74,7 @@ export const renderTabla = (
                 chipValue,
                 tableId,
                 modoBorrado,
+                word: "caca",
               });
             }
           }}
@@ -102,13 +103,15 @@ export const renderTabla = (
                   alt="chip"
                   className="image-default"
                   onClick={(e) => {
-                    if (!isSpinning) {
+                    e.stopPropagation();
+                    if (!isSpinning && modoBorrado) {
                       areYouGoingtoBetOrClear({
                         columnas: j,
                         filas: i,
                         chipValue,
                         tableId,
                         modoBorrado,
+                        word: "pis",
                       });
                       borrarFicha(ficha.id);
                     }

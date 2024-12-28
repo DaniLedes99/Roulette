@@ -36,6 +36,7 @@ const Board = ({
   setDeshechas,
   lastPlay,
   lastBet,
+  setMoneyBet,
 }) => {
   const [nextId, setNextId] = useState(1);
 
@@ -61,13 +62,13 @@ const Board = ({
     chipValue,
     tableId,
     modoBorrado,
+    word,
   }) => {
     if (!activeChip || !TABLES[tableId]) {
       console.log("No se eligió ninguna chip o Table ID no encontrado");
     }
 
     const bettedNumbers = TABLES[tableId][filas][columnas];
-    //console.log(`bettedNumbers: ${bettedNumbers}`);
 
     setAPUESTAS((prevApuestas) => {
       const nuevoEstado = { ...prevApuestas };
@@ -75,10 +76,13 @@ const Board = ({
       if (modoBorrado) {
         if (nuevoEstado[bettedNumbers]) {
           nuevoEstado[bettedNumbers].valor = 0;
+          setMoneyBet((prevMoneyBet) => prevMoneyBet - chipValue);
         }
       } else {
         if (nuevoEstado[bettedNumbers]) {
-          nuevoEstado[bettedNumbers].valor += chipValue;
+          const valor = (nuevoEstado[bettedNumbers].valor += chipValue);
+          console.log(valor, word);
+          setMoneyBet((prevMoneyBet) => prevMoneyBet + chipValue);
         }
       }
 

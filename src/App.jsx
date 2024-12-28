@@ -19,8 +19,8 @@ function App() {
   const [lastPlay, setLastPlay] = useState([]);
   const [lastBet, setLastBet] = useState([]);
   const [currentNumber, setCurrentNumber] = useState(0);
-  const [matchingBets, setMatchingBets] = useState([]);
   const [money, setMoney] = useState(1000);
+  const [moneyBet, setMoneyBet] = useState(0);
 
   const clearAllChips = () => {
     setFichas([]);
@@ -69,7 +69,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <MoneyCount money={money} />
+        <MoneyCount money={money} moneyBet={moneyBet} />
         <Ruleta
           isSpinning={isSpinning}
           setIsSpinning={setIsSpinning}
@@ -107,6 +107,7 @@ function App() {
           lastPlay={lastPlay}
           setLastPlay={setLastPlay}
           lastBet={lastBet}
+          setMoneyBet={setMoneyBet}
         />
         <Chip
           setActiveChip={setActiveChip}
