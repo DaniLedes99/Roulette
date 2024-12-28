@@ -7,19 +7,19 @@ import imagenContornoRuleta2 from "../../../img/roulette_4.png";
 import imagenContornoRuleta3 from "../../../img/roulette_5.png";
 import "./Ruleta.css";
 import { ROULETTE_VALUE_TO_POSSIBLE_OUTCOME } from "../Board/BoardService";
-import axios from "axios"
 
 const Ruleta = ({
   isSpinning,
   setIsSpinning,
   setFichas,
   clearAllChips,
-  APUESTAS,fichas, setLastPlay, setLastBet,
+  APUESTAS,
+  fichas,
+  setLastPlay,
+  setLastBet,
 }) => {
   const [currentNumber, setCurrentNumber] = useState(23); // el número que viene del servidor
   const [showText, setShowText] = useState(false);
-
-
 
   useEffect(() => {
     if (currentNumber !== null) {
@@ -29,21 +29,15 @@ const Ruleta = ({
     }
   }, [currentNumber]);
 
-  const fetchRandomNumber = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/sendrandomnumber");
-      const { number } = response.data;
-      setCurrentNumber(number);
-    } catch (error) {
-      console.error("Error al obtener el número aleatorio:", error);
-    }
+  const fetchRandomNumber = () => {
+    const randomIndex = Math.floor(Math.random() * RouletteWheelNumbers.length);
+    const number = RouletteWheelNumbers[randomIndex];
+    setCurrentNumber(number);
   };
-
 
   const handleClick = () => {
     fetchRandomNumber();
   };
-
 
   const RouletteWheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5,
@@ -105,8 +99,6 @@ const Ruleta = ({
     return nonZeroBets;
   };
 
-
-
   const processBets = (APUESTAS, currentNumber) => {
     const bets = getBets(APUESTAS);
     const matchingBets = Object.entries(bets).map(([key, e]) => {
@@ -125,10 +117,10 @@ const Ruleta = ({
     return { matchingBets };
   };
 
-  const guardarHistorial=(fichas)=>{
-    setLastPlay(fichas)
-    setLastBet(APUESTAS)
-}
+  const guardarHistorial = (fichas) => {
+    setLastPlay(fichas);
+    setLastBet(APUESTAS);
+  };
 
   const spinWheel = (number) => {
     const bezier = [0.165, 0.84, 0.44, 1.005];
@@ -159,16 +151,14 @@ const Ruleta = ({
         const { matchingBets } = processBets(APUESTAS, currentNumber);
         const winningBets = matchingBets.filter((bet) => bet.win);
         const LosingBets = matchingBets.filter((bet) => !bet.win);
-        console.log(matchingBets)
+        console.log(matchingBets);
         setIsSpinning(false);
         setShowText(true);
         clearAllChips();
-        guardarHistorial(fichas, APUESTAS)
+        guardarHistorial(fichas, APUESTAS);
         setFichas([]);
       },
     });
-
- 
 
     anime({
       targets: ".ball-container",
@@ -183,8 +173,6 @@ const Ruleta = ({
       easing: `cubicBezier(${bezier.join(",")})`,
     });
   };
-
- 
 
   return (
     <>
