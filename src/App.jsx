@@ -4,6 +4,7 @@ import Ruleta from "./Components/Roulette/Ruleta";
 import Board from "./Components/Board/Board";
 import Chip from "./Components/Chip/Chip";
 import { INITIAL_VALUES_APUESTAS } from "./Components/Board/BoardService";
+import MoneyCount from "./Components/MoneyCount/MoneyCount";
 
 function App() {
   const [activeChip, setActiveChip] = useState(null);
@@ -15,8 +16,11 @@ function App() {
   const [historialFichas, setHistorialFichas] = useState([]);
   const [deshechas, setDeshechas] = useState([]);
   const [APUESTAS, setAPUESTAS] = useState(INITIAL_VALUES_APUESTAS);
-  const [lastPlay, setLastPlay]=useState([])
-  const [lastBet, setLastBet]=useState([])
+  const [lastPlay, setLastPlay] = useState([]);
+  const [lastBet, setLastBet] = useState([]);
+  const [currentNumber, setCurrentNumber] = useState(0);
+  const [matchingBets, setMatchingBets] = useState([]);
+  const [money, setMoney] = useState(1000);
 
   const clearAllChips = () => {
     setFichas([]);
@@ -28,7 +32,6 @@ function App() {
       return newApuestas;
     });
   };
-
 
   const deshacer = () => {
     if (historialFichas.length > 0) {
@@ -54,10 +57,11 @@ function App() {
   };
 
   const dontFollowmeImSpinning = (isSpinning, setIsFollowing) => {
-    if (isSpinning === true) {
+    if (isSpinning) {
       setIsFollowing(false);
     }
   };
+
   useEffect(() => {
     dontFollowmeImSpinning(isSpinning, setIsFollowing);
   }, [isSpinning]);
@@ -65,6 +69,7 @@ function App() {
   return (
     <>
       <div className="container">
+        <MoneyCount money={money} />
         <Ruleta
           isSpinning={isSpinning}
           setIsSpinning={setIsSpinning}
@@ -75,6 +80,10 @@ function App() {
           lastplay={lastPlay}
           setLastPlay={setLastPlay}
           setLastBet={setLastBet}
+          currentNumber={currentNumber}
+          setCurrentNumber={setCurrentNumber}
+          money={money}
+          setMoney={setMoney}
         />
         <Board
           activeChip={activeChip}

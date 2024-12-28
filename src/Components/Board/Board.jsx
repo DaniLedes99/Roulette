@@ -5,9 +5,15 @@ import boardImageDown from "../../../img/boarddown.png";
 import "./Board.css";
 import React, { useState } from "react";
 import Buttons from "../Buttons/Buttons";
-import { tableMeasures0, tableMeasures1, tableMeasures2, tableMeasures3, tableMeasures4, renderTabla } from "../Board/MedidasTabla";
+import {
+  tableMeasures0,
+  tableMeasures1,
+  tableMeasures2,
+  tableMeasures3,
+  tableMeasures4,
+  renderTabla,
+} from "../Board/MedidasTabla";
 import { TABLES } from "../ApuestasService";
-
 
 const Board = ({
   activeChip,
@@ -20,90 +26,97 @@ const Board = ({
   APUESTAS,
   setAPUESTAS,
   rehacer,
-  deshacer,clearAllChips, fichas, setFichas, historialFichas, setHistorialFichas, deshechas, setDeshechas, lastPlay, lastBet
+  deshacer,
+  clearAllChips,
+  fichas,
+  setFichas,
+  historialFichas,
+  setHistorialFichas,
+  deshechas,
+  setDeshechas,
+  lastPlay,
+  lastBet,
 }) => {
-
   const [nextId, setNextId] = useState(1);
 
-    const toggleModoBorrado = () => {
+  const toggleModoBorrado = () => {
     setActiveChip(null);
     setIsFollowing(false);
     setModoBorrado((prevState) => !prevState);
   };
-  
+
   const borrarFicha = (id) => {
-     const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
     setFichas(nuevasFichas);
-}
- 
+  };
+
   const repeatBet = () => {
     setFichas(lastPlay);
-    setAPUESTAS(lastBet)
-};
+    setAPUESTAS(lastBet);
+  };
 
-
-const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
-
-  if (!activeChip || !TABLES[tableId]) {
-    console.log("No se eligió ninguna chip o Table ID no encontrado");
-  }
-
-  const bettedNumbers = TABLES[tableId][filas][columnas];
-  console.log(`bettedNumbers: ${bettedNumbers}`);
-
-  setAPUESTAS((prevApuestas) => {
-    const nuevoEstado = { ...prevApuestas };
-
-    if (modoBorrado) {
-      if (nuevoEstado[bettedNumbers]) {
-        nuevoEstado[bettedNumbers].valor = 0;
-      }
-    } else {
-      if (nuevoEstado[bettedNumbers]) {
-        nuevoEstado[bettedNumbers].valor += chipValue;
-      }
+  const areYouGoingtoBetOrClear = ({
+    columnas,
+    filas,
+    chipValue,
+    tableId,
+    modoBorrado,
+  }) => {
+    if (!activeChip || !TABLES[tableId]) {
+      console.log("No se eligió ninguna chip o Table ID no encontrado");
     }
 
-    return nuevoEstado;
-  });
+    const bettedNumbers = TABLES[tableId][filas][columnas];
+    //console.log(`bettedNumbers: ${bettedNumbers}`);
 
-  if (!modoBorrado) {
-    settearPosiciónFicha(columnas, filas, chipValue, tableId);
-  }
-};
+    setAPUESTAS((prevApuestas) => {
+      const nuevoEstado = { ...prevApuestas };
 
-  
-  const chipValueToColor=(nuevoValor) =>{
-      if (nuevoValor > 99) {
-       return "Black";
-      } else if (nuevoValor > 24) {
-        return "Blue";
-      } else if (nuevoValor > 9) {
-       return "Orange";
+      if (modoBorrado) {
+        if (nuevoEstado[bettedNumbers]) {
+          nuevoEstado[bettedNumbers].valor = 0;
+        }
+      } else {
+        if (nuevoEstado[bettedNumbers]) {
+          nuevoEstado[bettedNumbers].valor += chipValue;
+        }
       }
-  return "Purple"
-  }
- 
+
+      return nuevoEstado;
+    });
+
+    if (!modoBorrado) {
+      settearPosiciónFicha(columnas, filas, chipValue, tableId);
+    }
+  };
+
+  const chipValueToColor = (nuevoValor) => {
+    if (nuevoValor > 99) {
+      return "Black";
+    } else if (nuevoValor > 24) {
+      return "Blue";
+    } else if (nuevoValor > 9) {
+      return "Orange";
+    }
+    return "Purple";
+  };
+
   const settearPosiciónFicha = (j, i, chipValue, tableId) => {
-  
-  
     const fichaExistente = fichas.find(
       (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
     );
-   
+
     if (fichaExistente) {
-  
-        const newChipValue = fichaExistente.chipValue + chipValue;
-        const chipColor = chipValueToColor(newChipValue);
-      
-        const nuevasFichas = fichas.map((ficha) =>
+      const newChipValue = fichaExistente.chipValue + chipValue;
+      const chipColor = chipValueToColor(newChipValue);
+
+      const nuevasFichas = fichas.map((ficha) =>
         ficha.id === fichaExistente.id
           ? { ...ficha, chipValue: newChipValue, chipType: chipColor }
           : ficha
       );
       setFichas(nuevasFichas);
     } else {
-
       setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
       setDeshechas([]);
       setFichas([
@@ -121,7 +134,6 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
     }
   };
 
-
   return (
     <>
       <div className="Board-container-main">
@@ -136,14 +148,15 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
           isSpinning={isSpinning}
           repeatBet={repeatBet}
         />
-        
+
         <div className="Board-container-up">
           <div className="Tabla-overlay-up">
             <div className="container-img-table">
               <img className="Board-img" src={ZeroImage} alt="Board" />
               <table className="Tabla">
                 <tbody>
-                  {renderTabla(fichas,
+                  {renderTabla(
+                    fichas,
                     tableMeasures0.cantidadDeFilas,
                     tableMeasures0.cantidadDeColumnas,
                     tableMeasures0.anchoDeFilas,
@@ -163,7 +176,8 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
               <img className="Board-img" src={BoardImage} alt="Board" />
               <table className="Tabla">
                 <tbody>
-                  {renderTabla(fichas,
+                  {renderTabla(
+                    fichas,
                     tableMeasures1.cantidadDeFilas,
                     tableMeasures1.cantidadDeColumnas,
                     tableMeasures1.anchoDeFilas,
@@ -188,7 +202,8 @@ const areYouGoingtoBetOrClear = ({ columnas, filas, chipValue, tableId, modoBorr
               />
               <table className="Tabla">
                 <tbody>
-                  {renderTabla(fichas,
+                  {renderTabla(
+                    fichas,
                     tableMeasures2.cantidadDeFilas,
                     tableMeasures2.cantidadDeColumnas,
                     tableMeasures2.anchoDeFilas,
