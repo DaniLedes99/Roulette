@@ -3,7 +3,7 @@ import BoardImage from "../../../img/BoardMin.png";
 import Right from "../../../img/right.png";
 import boardImageDown from "../../../img/boarddown.png";
 import "./Board.css";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Buttons from "../Buttons/Buttons";
 import {
   tableMeasures0,
@@ -13,7 +13,6 @@ import {
   tableMeasures4,
   renderTabla,
 } from "../Board/MedidasTabla";
-import { TABLES } from "../ApuestasService";
 
 const Board = ({
   activeChip,
@@ -23,7 +22,6 @@ const Board = ({
   setActiveChip,
   setIsFollowing,
   isSpinning,
-  APUESTAS,
   setAPUESTAS,
   rehacer,
   deshacer,
@@ -31,15 +29,11 @@ const Board = ({
   fichas,
   setFichas,
   historialFichas,
-  setHistorialFichas,
   deshechas,
-  setDeshechas,
   lastPlay,
   lastBet,
-  setMoneyBet,
+  areYouGoingToBetOrClear,
 }) => {
-  const [nextId, setNextId] = useState(1);
-
   const toggleModoBorrado = () => {
     setActiveChip(null);
     setIsFollowing(false);
@@ -56,87 +50,100 @@ const Board = ({
     setAPUESTAS(lastBet);
   };
 
-  const areYouGoingtoBetOrClear = ({
-    columnas,
-    filas,
-    chipValue,
-    tableId,
-    modoBorrado,
-    word,
-  }) => {
-    if (!activeChip || !TABLES[tableId]) {
-      console.log("No se eligió ninguna chip o Table ID no encontrado");
-    }
+  const tabla0 = useMemo(
+    () =>
+      renderTabla(
+        fichas,
+        tableMeasures0.cantidadDeFilas,
+        tableMeasures0.cantidadDeColumnas,
+        tableMeasures0.anchoDeFilas,
+        tableMeasures0.anchoDeColumnas,
+        areYouGoingToBetOrClear,
+        activeChip,
+        chipValue,
+        "table0",
+        modoBorrado,
+        isSpinning,
+        borrarFicha
+      ),
+    [fichas, activeChip, chipValue, modoBorrado, isSpinning, borrarFicha]
+  );
 
-    const bettedNumbers = TABLES[tableId][filas][columnas];
+  const tabla1 = useMemo(
+    () =>
+      renderTabla(
+        fichas,
+        tableMeasures1.cantidadDeFilas,
+        tableMeasures1.cantidadDeColumnas,
+        tableMeasures1.anchoDeFilas,
+        tableMeasures1.anchoDeColumnas,
+        areYouGoingToBetOrClear,
+        activeChip,
+        chipValue,
+        "table1",
+        modoBorrado,
+        isSpinning,
+        borrarFicha
+      ),
+    [fichas, activeChip, chipValue, modoBorrado, isSpinning, borrarFicha]
+  );
 
-    setAPUESTAS((prevApuestas) => {
-      const nuevoEstado = { ...prevApuestas };
+  const tabla2 = useMemo(
+    () =>
+      renderTabla(
+        fichas,
+        tableMeasures2.cantidadDeFilas,
+        tableMeasures2.cantidadDeColumnas,
+        tableMeasures2.anchoDeFilas,
+        tableMeasures2.anchoDeColumnas,
+        areYouGoingToBetOrClear,
+        activeChip,
+        chipValue,
+        "table2",
+        modoBorrado,
+        isSpinning,
+        borrarFicha
+      ),
+    [fichas, activeChip, chipValue, modoBorrado, isSpinning, borrarFicha]
+  );
 
-      if (modoBorrado) {
-        if (nuevoEstado[bettedNumbers]) {
-          nuevoEstado[bettedNumbers].valor = 0;
-          setMoneyBet((prevMoneyBet) => prevMoneyBet - chipValue);
-        }
-      } else {
-        if (nuevoEstado[bettedNumbers]) {
-          const valor = (nuevoEstado[bettedNumbers].valor += chipValue);
-          console.log(valor, word);
-          setMoneyBet((prevMoneyBet) => prevMoneyBet + chipValue);
-        }
-      }
+  const tabla3 = useMemo(
+    () =>
+      renderTabla(
+        fichas,
+        tableMeasures3.cantidadDeFilas,
+        tableMeasures3.cantidadDeColumnas,
+        tableMeasures3.anchoDeFilas,
+        tableMeasures3.anchoDeColumnas,
+        areYouGoingToBetOrClear,
+        activeChip,
+        chipValue,
+        "table3",
+        modoBorrado,
+        isSpinning,
+        borrarFicha
+      ),
+    [fichas, activeChip, chipValue, modoBorrado, isSpinning, borrarFicha]
+  );
 
-      return nuevoEstado;
-    });
-
-    if (!modoBorrado) {
-      settearPosiciónFicha(columnas, filas, chipValue, tableId);
-    }
-  };
-
-  const chipValueToColor = (nuevoValor) => {
-    if (nuevoValor > 99) {
-      return "Black";
-    } else if (nuevoValor > 24) {
-      return "Blue";
-    } else if (nuevoValor > 9) {
-      return "Orange";
-    }
-    return "Purple";
-  };
-
-  const settearPosiciónFicha = (j, i, chipValue, tableId) => {
-    const fichaExistente = fichas.find(
-      (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
-    );
-
-    if (fichaExistente) {
-      const newChipValue = fichaExistente.chipValue + chipValue;
-      const chipColor = chipValueToColor(newChipValue);
-
-      const nuevasFichas = fichas.map((ficha) =>
-        ficha.id === fichaExistente.id
-          ? { ...ficha, chipValue: newChipValue, chipType: chipColor }
-          : ficha
-      );
-      setFichas(nuevasFichas);
-    } else {
-      setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
-      setDeshechas([]);
-      setFichas([
-        ...fichas,
-        {
-          id: nextId,
-          x: j,
-          y: i,
-          tableId: tableId,
-          chipType: chipValueToColor(chipValue),
-          chipValue: chipValue,
-        },
-      ]);
-      setNextId(nextId + 1);
-    }
-  };
+  const tabla4 = useMemo(
+    () =>
+      renderTabla(
+        fichas,
+        tableMeasures4.cantidadDeFilas,
+        tableMeasures4.cantidadDeColumnas,
+        tableMeasures4.anchoDeFilas,
+        tableMeasures4.anchoDeColumnas,
+        areYouGoingToBetOrClear,
+        activeChip,
+        chipValue,
+        "table4",
+        modoBorrado,
+        isSpinning,
+        borrarFicha
+      ),
+    [fichas, activeChip, chipValue, modoBorrado, isSpinning, borrarFicha]
+  );
 
   return (
     <>
@@ -158,43 +165,13 @@ const Board = ({
             <div className="container-img-table">
               <img className="Board-img" src={ZeroImage} alt="Board" />
               <table className="Tabla">
-                <tbody>
-                  {renderTabla(
-                    fichas,
-                    tableMeasures0.cantidadDeFilas,
-                    tableMeasures0.cantidadDeColumnas,
-                    tableMeasures0.anchoDeFilas,
-                    tableMeasures0.anchoDeColumnas,
-                    areYouGoingtoBetOrClear,
-                    activeChip,
-                    chipValue,
-                    "table0",
-                    modoBorrado,
-                    isSpinning,
-                    borrarFicha
-                  )}
-                </tbody>
+                <tbody>{tabla0}</tbody>
               </table>
             </div>
             <div className="container-img-table">
               <img className="Board-img" src={BoardImage} alt="Board" />
               <table className="Tabla">
-                <tbody>
-                  {renderTabla(
-                    fichas,
-                    tableMeasures1.cantidadDeFilas,
-                    tableMeasures1.cantidadDeColumnas,
-                    tableMeasures1.anchoDeFilas,
-                    tableMeasures1.anchoDeColumnas,
-                    areYouGoingtoBetOrClear,
-                    activeChip,
-                    chipValue,
-                    "table1",
-                    modoBorrado,
-                    isSpinning,
-                    borrarFicha
-                  )}
-                </tbody>
+                <tbody>{tabla1}</tbody>
               </table>
             </div>
             <div className="container-img-table">
@@ -205,22 +182,7 @@ const Board = ({
                 alt="Board"
               />
               <table className="Tabla">
-                <tbody>
-                  {renderTabla(
-                    fichas,
-                    tableMeasures2.cantidadDeFilas,
-                    tableMeasures2.cantidadDeColumnas,
-                    tableMeasures2.anchoDeFilas,
-                    tableMeasures2.anchoDeColumnas,
-                    areYouGoingtoBetOrClear,
-                    activeChip,
-                    chipValue,
-                    "table2",
-                    modoBorrado,
-                    isSpinning,
-                    borrarFicha
-                  )}
-                </tbody>
+                <tbody>{tabla2}</tbody>
               </table>
             </div>
           </div>
@@ -233,40 +195,10 @@ const Board = ({
           />
           <div className="Tabla-overlay-down">
             <table className="Tabla-down">
-              <tbody>
-                {renderTabla(
-                  fichas,
-                  tableMeasures3.cantidadDeFilas,
-                  tableMeasures3.cantidadDeColumnas,
-                  tableMeasures3.anchoDeFilas,
-                  tableMeasures3.anchoDeColumnas,
-                  areYouGoingtoBetOrClear,
-                  activeChip,
-                  chipValue,
-                  "table3",
-                  modoBorrado,
-                  isSpinning,
-                  borrarFicha
-                )}
-              </tbody>
+              <tbody>{tabla3}</tbody>
             </table>
             <table className="Tabla-down">
-              <tbody>
-                {renderTabla(
-                  fichas,
-                  tableMeasures4.cantidadDeFilas,
-                  tableMeasures4.cantidadDeColumnas,
-                  tableMeasures4.anchoDeFilas,
-                  tableMeasures4.anchoDeColumnas,
-                  areYouGoingtoBetOrClear,
-                  activeChip,
-                  chipValue,
-                  "table4",
-                  modoBorrado,
-                  isSpinning,
-                  borrarFicha
-                )}
-              </tbody>
+              <tbody>{tabla4}</tbody>
             </table>
           </div>
         </div>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import "./App.css";
 import Ruleta from "./Components/Roulette/Ruleta";
 import Board from "./Components/Board/Board";
 import Chip from "./Components/Chip/Chip";
 import { INITIAL_VALUES_APUESTAS } from "./Components/Board/BoardService";
 import MoneyCount from "./Components/MoneyCount/MoneyCount";
+import { TABLES } from "./Components/ApuestasService";
 
 function App() {
   const [activeChip, setActiveChip] = useState(null);
@@ -21,6 +22,7 @@ function App() {
   const [currentNumber, setCurrentNumber] = useState(0);
   const [money, setMoney] = useState(1000);
   const [moneyBet, setMoneyBet] = useState(0);
+  const [nextId, setNextId] = useState(1);
 
   const clearAllChips = () => {
     setFichas([]);
@@ -56,6 +58,105 @@ function App() {
     }
   };
 
+  const settearPosiciónFicha = (j, i, chipValue, tableId) => {
+    const fichaExistente = fichas.find(
+      (ficha) => ficha.x === j && ficha.y === i && ficha.tableId === tableId
+    );
+
+    if (fichaExistente) {
+      const newChipValue = fichaExistente.chipValue + chipValue;
+      const chipColor = chipValueToColor(newChipValue);
+
+      const nuevasFichas = fichas.map((ficha) =>
+        ficha.id === fichaExistente.id
+          ? { ...ficha, chipValue: newChipValue, chipType: chipColor }
+          : ficha
+      );
+      setFichas(nuevasFichas);
+      setMoneyBet(newChipValue);
+    } else {
+      setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
+      setDeshechas([]);
+      setFichas([
+        ...fichas,
+        {
+          id: nextId,
+          x: j,
+          y: i,
+          tableId: tableId,
+          chipType: chipValueToColor(chipValue),
+          chipValue: chipValue,
+        },
+      ]);
+      setNextId(nextId + 1);
+      setMoneyBet(chipValue);
+    }
+  };
+
+  const areYouGoingToBetOrClear = useCallback(
+    ({ columnas, filas, chipValue, tableId, modoBorrado, word }) => {
+      if (!activeChip || !TABLES[tableId]) {
+        console.log("No se eligió ninguna chip o Table ID no encontrado");
+        return;
+      }
+
+      const bettedNumbers = TABLES[tableId][filas][columnas];
+
+      setAPUESTAS((prevApuestas) => {
+        const nuevoEstado = { ...prevApuestas };
+
+        if (modoBorrado) {
+          if (nuevoEstado[bettedNumbers]) {
+            nuevoEstado[bettedNumbers].valor = 0;
+            setMoneyBet((prevMoneyBet) => prevMoneyBet - chipValue);
+          }
+        }
+        return nuevoEstado;
+      });
+
+      if (!modoBorrado) {
+        settearPosiciónFicha(columnas, filas, chipValue, tableId);
+      }
+    },
+    [activeChip, TABLES, setAPUESTAS, setMoneyBet, settearPosiciónFicha]
+  );
+
+  const chipValueToColor = (nuevoValor) => {
+    console.log(nuevoValor, "nuevoValor");
+    if (nuevoValor > 99) {
+      return "Black";
+    } else if (nuevoValor > 24) {
+      return "Blue";
+    } else if (nuevoValor > 9) {
+      return "Orange";
+    }
+    return "Purple";
+  };
+
+  const boardProps = useMemo(
+    () => ({
+      activeChip,
+      chipValue,
+      modoBorrado,
+      setModoBorrado,
+      setActiveChip,
+      setIsFollowing,
+      isSpinning,
+      setAPUESTAS,
+      rehacer,
+      deshacer,
+      clearAllChips,
+      fichas,
+      setFichas,
+      historialFichas,
+      deshechas,
+      lastPlay,
+      lastBet,
+      areYouGoingToBetOrClear,
+    }),
+    [activeChip, chipValue, modoBorrado, areYouGoingToBetOrClear]
+  );
+
   const dontFollowmeImSpinning = (isSpinning, setIsFollowing) => {
     if (isSpinning) {
       setIsFollowing(false);
@@ -85,30 +186,7 @@ function App() {
           money={money}
           setMoney={setMoney}
         />
-        <Board
-          activeChip={activeChip}
-          chipValue={chipValue}
-          modoBorrado={modoBorrado}
-          setModoBorrado={setModoBorrado}
-          setActiveChip={setActiveChip}
-          setIsFollowing={setIsFollowing}
-          isSpinning={isSpinning}
-          fichas={fichas}
-          setFichas={setFichas}
-          historialFichas={historialFichas}
-          setHistorialFichas={setHistorialFichas}
-          APUESTAS={APUESTAS}
-          setAPUESTAS={setAPUESTAS}
-          deshechas={deshechas}
-          setDeshechas={setDeshechas}
-          deshacer={deshacer}
-          clearAllChips={clearAllChips}
-          rehacer={rehacer}
-          lastPlay={lastPlay}
-          setLastPlay={setLastPlay}
-          lastBet={lastBet}
-          setMoneyBet={setMoneyBet}
-        />
+        <Board {...boardProps} />
         <Chip
           setActiveChip={setActiveChip}
           setChipValue={setChipValue}
