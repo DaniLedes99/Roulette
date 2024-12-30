@@ -27,6 +27,8 @@ function App() {
 
   const clearAllChips = () => {
     setFichas([]);
+    setMoneyBet(0);
+    setMoney((prevMoney) => prevMoney + moneyBet);
     setAPUESTAS((prevApuestas) => {
       const newApuestas = {};
       for (let key in prevApuestas) {
@@ -38,8 +40,17 @@ function App() {
 
   const deshacer = () => {
     if (historialFichas.length > 0) {
+      const lastChipValue = fichas.at(-1).chipValue;
+      setMoneyBet((prevMoneyBet) => prevMoneyBet - lastChipValue);
+      setMoney((prevMoney) => prevMoney + lastChipValue);
       const estadoAnterior = historialFichas.pop();
-      setDeshechas([...deshechas, { fichas: fichas, apuestas: APUESTAS }]);
+      setDeshechas([
+        ...deshechas,
+        {
+          fichas: fichas,
+          apuestas: APUESTAS,
+        },
+      ]);
       setFichas(estadoAnterior.fichas);
       setAPUESTAS(estadoAnterior.apuestas);
       setHistorialFichas([...historialFichas]);
@@ -48,10 +59,16 @@ function App() {
 
   const rehacer = () => {
     if (deshechas.length > 0) {
+      const lastChipValueToReDo = deshechas.at(-1).fichas.at(-1).chipValue;
+      setMoneyBet((prevMoneyBet) => prevMoneyBet + lastChipValueToReDo);
+      setMoney((prevMoney) => prevMoney - lastChipValueToReDo);
       const estadoRehecho = deshechas.pop();
       setHistorialFichas([
         ...historialFichas,
-        { fichas: fichas, apuestas: APUESTAS },
+        {
+          fichas: fichas,
+          apuestas: APUESTAS,
+        },
       ]);
       setFichas(estadoRehecho.fichas);
       setAPUESTAS(estadoRehecho.apuestas);
@@ -74,7 +91,6 @@ function App() {
           : ficha
       );
       setFichas(nuevasFichas);
-      console.log("moneyBet", moneyBet);
       setMoneyBet((prevMoneyBet) => prevMoneyBet + chipValue);
       setMoney((prevMoney) => prevMoney - chipValue);
     } else {
