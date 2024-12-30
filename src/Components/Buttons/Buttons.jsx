@@ -1,6 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faArrowRotateLeft, faArrowRotateRight, faEraser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faXmark,
+  faArrowRotateLeft,
+  faArrowRotateRight,
+  faEraser,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Buttons.css";
 
 const Buttons = ({
@@ -11,11 +16,12 @@ const Buttons = ({
   modoBorrado,
   historialFichas,
   deshechas,
-  isSpinning, repeatBet
+  isSpinning,
+  repeatBet,
 }) => {
   return (
     <div className="buttons-container">
-      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+      <div className={`cross-container ${isSpinning ? "icon-disabled" : ""}`}>
         <FontAwesomeIcon
           onClick={deshacer}
           disabled={historialFichas.length === 0}
@@ -25,7 +31,7 @@ const Buttons = ({
           color="red"
         />
       </div>
-      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+      <div className={`cross-container ${isSpinning ? "icon-disabled" : ""}`}>
         <FontAwesomeIcon
           icon={faArrowRotateRight}
           onClick={rehacer}
@@ -35,7 +41,7 @@ const Buttons = ({
           color="red"
         />
       </div>
-      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+      <div className={`cross-container ${isSpinning ? "icon-disabled" : ""}`}>
         <FontAwesomeIcon
           icon={faEraser}
           size="3x"
@@ -44,7 +50,7 @@ const Buttons = ({
           color={modoBorrado ? "gray" : "inherit"}
         />
       </div>
-      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+      <div className={`cross-container ${isSpinning ? "icon-disabled" : ""}`}>
         <FontAwesomeIcon
           icon={faXmark}
           onClick={clearAllChips}
@@ -53,7 +59,7 @@ const Buttons = ({
           size="3x"
         ></FontAwesomeIcon>
       </div>
-      <div className={`cross-container ${isSpinning ? 'icon-disabled' : ''}`}>
+      <div className={`cross-container ${isSpinning ? "icon-disabled" : ""}`}>
         <button onClick={repeatBet}>Repetir la Apuesta</button>
       </div>
     </div>

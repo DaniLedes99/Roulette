@@ -74,6 +74,7 @@ function App() {
       );
       setFichas(nuevasFichas);
       setMoneyBet(newChipValue);
+      setMoney((prevMoney) => prevMoney - chipValue);
     } else {
       setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
       setDeshechas([]);
@@ -90,11 +91,17 @@ function App() {
       ]);
       setNextId(nextId + 1);
       setMoneyBet(chipValue);
+      setMoney((prevMoney) => prevMoney - chipValue);
     }
   };
 
   const areYouGoingToBetOrClear = useCallback(
-    ({ columnas, filas, chipValue, tableId, modoBorrado, word }) => {
+    ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
+      if (chipValue > money) {
+        console.log("No tienes suficiente dinero para apostar.");
+        return;
+      }
+
       if (!activeChip || !TABLES[tableId]) {
         console.log("No se eligió ninguna chip o Table ID no encontrado");
         return;
@@ -108,7 +115,6 @@ function App() {
         if (modoBorrado) {
           if (nuevoEstado[bettedNumbers]) {
             nuevoEstado[bettedNumbers].valor = 0;
-            setMoneyBet((prevMoneyBet) => prevMoneyBet - chipValue);
           }
         }
         return nuevoEstado;

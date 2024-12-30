@@ -102,7 +102,7 @@ export const renderTabla = (
                   alt="chip"
                   className="image-default"
                   onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
                     if (!isSpinning && modoBorrado) {
                       areYouGoingToBetOrClear({
                         columnas: j,
