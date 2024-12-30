@@ -14,12 +14,10 @@ const Chip = ({
   const [previewImagePos, setPreviewImagePos] = useState({ x: 0, y: 0 }); // donde te sigue la ficha?
   const [activeChipLocal, setActiveChipLocal] = useState(null);
 
-
-
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (isFollowing) {
-        setPreviewImagePos({ x: e.clientX, y: e.clientY }); // -22 y -18
+        setPreviewImagePos({ x: e.clientX, y: e.clientY });
       }
     };
 

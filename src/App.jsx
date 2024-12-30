@@ -23,6 +23,7 @@ function App() {
   const [money, setMoney] = useState(1000);
   const [moneyBet, setMoneyBet] = useState(0);
   const [nextId, setNextId] = useState(1);
+  const [shake, setShake] = useState(false);
 
   const clearAllChips = () => {
     setFichas([]);
@@ -73,7 +74,8 @@ function App() {
           : ficha
       );
       setFichas(nuevasFichas);
-      setMoneyBet(newChipValue);
+      console.log("moneyBet", moneyBet);
+      setMoneyBet((prevMoneyBet) => prevMoneyBet + chipValue);
       setMoney((prevMoney) => prevMoney - chipValue);
     } else {
       setHistorialFichas([...historialFichas, { fichas, apuestas: APUESTAS }]);
@@ -90,7 +92,7 @@ function App() {
         },
       ]);
       setNextId(nextId + 1);
-      setMoneyBet(chipValue);
+      setMoneyBet((prevMoneyBet) => prevMoneyBet + chipValue);
       setMoney((prevMoney) => prevMoney - chipValue);
     }
   };
@@ -98,7 +100,8 @@ function App() {
   const areYouGoingToBetOrClear = useCallback(
     ({ columnas, filas, chipValue, tableId, modoBorrado }) => {
       if (chipValue > money) {
-        console.log("No tienes suficiente dinero para apostar.");
+        setShake(true);
+        setTimeout(() => setShake(false), 1000);
         return;
       }
 
@@ -128,7 +131,6 @@ function App() {
   );
 
   const chipValueToColor = (nuevoValor) => {
-    console.log(nuevoValor, "nuevoValor");
     if (nuevoValor > 99) {
       return "Black";
     } else if (nuevoValor > 24) {
@@ -176,7 +178,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <MoneyCount money={money} moneyBet={moneyBet} />
+        <MoneyCount money={money} moneyBet={moneyBet} shake={shake} />
         <Ruleta
           isSpinning={isSpinning}
           setIsSpinning={setIsSpinning}
@@ -191,6 +193,7 @@ function App() {
           setCurrentNumber={setCurrentNumber}
           money={money}
           setMoney={setMoney}
+          setMoneyBet={setMoneyBet}
         />
         <Board {...boardProps} />
         <Chip

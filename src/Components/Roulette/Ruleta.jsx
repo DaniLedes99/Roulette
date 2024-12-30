@@ -21,6 +21,7 @@ const Ruleta = ({
   setCurrentNumber,
   money,
   setMoney,
+  setMoneyBet,
 }) => {
   const [showText, setShowText] = useState(false);
 
@@ -173,6 +174,7 @@ const Ruleta = ({
           return bet.win ? sum + bet.value : sum - bet.value;
         }, 0);
         setMoney(money + totalValue);
+        setMoneyBet(0);
       },
     });
 

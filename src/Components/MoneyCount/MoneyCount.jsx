@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import "./MoneyCount.css";
 
-export default function MoneyCount({ money, moneyBet }) {
+export default function MoneyCount({ money, moneyBet, shake }) {
   return (
     <div>
-      <div>
-        <p>Money: ${money}</p>
-        <p>Bet: ${moneyBet}</p>
+      <div className="money-container">
+        <p className={`money ${shake ? "alert" : ""}`}>Money: ${money}</p>
+        <p className="money">Bet: ${moneyBet}</p>
         <p></p>
       </div>
     </div>
