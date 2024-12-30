@@ -101,7 +101,6 @@ export const renderTabla = (
                   src={getChipImage(ficha.chipType)}
                   alt="chip"
                   className="image-default"
-                  onClick={(e) => {
                   onClick={() => {
                     if (!isSpinning && modoBorrado) {
                       areYouGoingToBetOrClear({
