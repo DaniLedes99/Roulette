@@ -18,38 +18,18 @@ const Board = ({
   activeChip,
   chipValue,
   modoBorrado,
-  setModoBorrado,
-  setActiveChip,
-  setIsFollowing,
   isSpinning,
-  setAPUESTAS,
   rehacer,
   deshacer,
   clearAllChips,
   fichas,
-  setFichas,
   historialFichas,
   deshechas,
-  lastPlay,
-  lastBet,
   areYouGoingToBetOrClear,
+  borrarFicha,
+  repeatBet,
+  toggleModoBorrado,
 }) => {
-  const toggleModoBorrado = () => {
-    setActiveChip(null);
-    setIsFollowing(false);
-    setModoBorrado((prevState) => !prevState);
-  };
-
-  const borrarFicha = (id) => {
-    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
-    setFichas(nuevasFichas);
-  };
-
-  const repeatBet = () => {
-    setFichas(lastPlay);
-    setAPUESTAS(lastBet);
-  };
-
   const tabla0 = useMemo(
     () =>
       renderTabla(

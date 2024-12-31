@@ -20,15 +20,15 @@ function App() {
   const [lastPlay, setLastPlay] = useState([]);
   const [lastBet, setLastBet] = useState([]);
   const [currentNumber, setCurrentNumber] = useState(0);
-  const [money, setMoney] = useState(1000);
+  const [money, setMoney] = useState(5000);
   const [moneyBet, setMoneyBet] = useState(0);
   const [nextId, setNextId] = useState(1);
   const [shake, setShake] = useState(false);
 
   const clearAllChips = () => {
     setFichas([]);
-    setMoneyBet(0);
     setMoney((prevMoney) => prevMoney + moneyBet);
+    setMoneyBet(0);
     setAPUESTAS((prevApuestas) => {
       const newApuestas = {};
       for (let key in prevApuestas) {
@@ -136,6 +136,8 @@ function App() {
             nuevoEstado[bettedNumbers].valor = 0;
           }
         }
+        nuevoEstado[bettedNumbers].valor += chipValue;
+
         return nuevoEstado;
       });
 
@@ -155,6 +157,48 @@ function App() {
       return "Orange";
     }
     return "Purple";
+  };
+
+  const toggleModoBorrado = () => {
+    setActiveChip(null);
+    setIsFollowing(false);
+    setModoBorrado((prevState) => !prevState);
+  };
+
+  const borrarFicha = (id) => {
+    const chipValueOfDeletedChip = fichas.find(
+      (ficha) => ficha.id === id
+    ).chipValue;
+    setMoneyBet((prevMoneyBet) => prevMoneyBet - chipValueOfDeletedChip);
+    setMoney((prevMoney) => prevMoney + chipValueOfDeletedChip);
+    const nuevasFichas = fichas.filter((ficha) => ficha.id !== id);
+    setFichas(nuevasFichas);
+  };
+
+  const repeatBet = () => {
+    const totalChipValue = lastPlay.reduce(
+      (acumulador, ficha) => acumulador + ficha.chipValue,
+      0
+    );
+
+    setFichas(lastPlay);
+    setAPUESTAS(lastBet);
+
+    setMoney((prevMoney) => {
+      if (prevMoney < totalChipValue) {
+        console.log("No tienes suficiente dinero para repetir esta apuesta.");
+        setShake(true);
+        setTimeout(() => setShake(false), 1000);
+        return prevMoney;
+      }
+
+      if (JSON.stringify(fichas) === JSON.stringify(lastPlay)) {
+        console.log("Ya tienes las mismas fichas, no se repetirá la apuesta.");
+        return prevMoney;
+      }
+      setMoneyBet(totalChipValue);
+      return prevMoney - totalChipValue;
+    });
   };
 
   const boardProps = useMemo(
@@ -177,8 +221,11 @@ function App() {
       lastPlay,
       lastBet,
       areYouGoingToBetOrClear,
+      toggleModoBorrado,
+      borrarFicha,
+      repeatBet,
     }),
-    [activeChip, chipValue, modoBorrado, areYouGoingToBetOrClear]
+    [activeChip, chipValue, modoBorrado, areYouGoingToBetOrClear, repeatBet]
   );
 
   const dontFollowmeImSpinning = (isSpinning, setIsFollowing) => {
