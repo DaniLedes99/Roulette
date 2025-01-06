@@ -171,7 +171,7 @@ const Ruleta = ({
         setFichas([]);
         const { matchingBets } = processBets(APUESTAS, currentNumber);
         const totalValue = matchingBets.reduce((sum, bet) => {
-          return bet.win ? sum + bet.value : sum - bet.value;
+          return bet.win ? sum + bet.value : 0;
         }, 0);
         setMoney(money + totalValue);
         setMoneyBet(0);
